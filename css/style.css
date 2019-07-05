@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: space-between;
+    background: black;
+    height: 100%;
+}
+
+#container {
+    padding-top: 100px;
+    margin: 0 auto;
+}
+
+#main-game {
+    flex-basis: 100%;
+}
+
+#guide {
+    flex-basis: 100%;
+    color: white;
+}
