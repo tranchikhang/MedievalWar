@@ -5,7 +5,7 @@ class Paladin extends BaseClass {
 
     constructor(scene) {
         super();
-        this.spritePath = '../assets/tilesets/'
+        this.spritePath = Config.ASSET_PATH + 'tilesets/'
         this.spriteFile = 'Toens_Medieval_v.1.0'
         this.standingAnimationKey = 'Paladin_stand'
         this.scene = scene;

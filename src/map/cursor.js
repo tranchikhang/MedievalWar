@@ -6,7 +6,7 @@ class Cursor {
     constructor(scene, level) {
         this.scene = scene;
         this.level = level;
-        this.scene.load.image('cursor', '../assets/cursor.png');
+        this.scene.load.image('cursor', Config.ASSET_PATH + 'cursor.png');
 
         // currentX and currentY are used to store postion on grid
         this.currentX = 0;
