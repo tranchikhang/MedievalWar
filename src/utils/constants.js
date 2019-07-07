@@ -13,8 +13,9 @@ class Constants {
         return -2;
     }
     // Use index to mark unit on map
+    // Player units index will start from zero
     // Unit with index = 0 will have 0 as value on map object
-    static get CELL_UNIT_OCCUPIED() {
+    static get CELL_PLAYER_UNIT_START() {
         return 0;
     }
 

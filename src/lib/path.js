@@ -24,8 +24,8 @@ class PathFinding {
      */
     static findShortestPath(map, start, end) {
         var queue = [{
-            x: start.currentX,
-            y: start.currentY,
+            x: start.x,
+            y: start.y,
             parent: null
         }];
         let visited = [];
@@ -43,10 +43,12 @@ class PathFinding {
                     x: currentPos.x + this.surroundingCell[i].x,
                     y: currentPos.y + this.surroundingCell[i].y
                 };
-                if (newPos.x == end.currentX && newPos.y == end.currentY) {
+                if (newPos.x == end.x && newPos.y == end.y) {
                     // Found end position, get full path from start to end
-                    return traceback(currentPos);
-                } else if (map[newPos.y][newPos.x] == 1) {
+                    newPos.parent = currentPos;
+                    return this.traceback(newPos);
+                } else if (map[newPos.y][newPos.x] == Constants.CELL_TERRAIN_ABLE_TO_PASS ||
+                    map[newPos.y][newPos.x] >= Constants.CELL_PLAYER_UNIT_START) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited
@@ -68,7 +70,7 @@ class PathFinding {
      * @return {array} array from destination back to start
      */
     static traceback(end) {
-        path = [end];
+        let path = [end];
         do {
             path.push(path[path.length - 1].parent);
         }
@@ -97,7 +99,7 @@ class PathFinding {
             let row = [];
             visited.push(row);
         }
-        visited[start.y][start.x] = Constants.CELL_UNIT_OCCUPIED;
+        visited[start.y][start.x] = Constants.CELL_PLAYER_UNIT_START;
         while (queue.length > 0) {
             // Get current position
             let currentPos = queue.shift();
@@ -111,7 +113,8 @@ class PathFinding {
                     x: currentPos.x + this.surroundingCell[i].x,
                     y: currentPos.y + this.surroundingCell[i].y
                 };
-                if (map[newPos.y][newPos.x] == Constants.CELL_TERRAIN_ABLE_TO_PASS) {
+                if (map[newPos.y][newPos.x] == Constants.CELL_TERRAIN_ABLE_TO_PASS ||
+                    map[newPos.y][newPos.x] >= Constants.CELL_PLAYER_UNIT_START) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited

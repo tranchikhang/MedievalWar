@@ -56,7 +56,7 @@ class Level {
      * @return {int|null} return unit index if that cell has a unit, else return null
      */
     getUnitOnMap(x, y) {
-        if (this.mapObject[y][x] >= Constants.CELL_UNIT_OCCUPIED) {
+        if (this.mapObject[y][x] >= Constants.CELL_PLAYER_UNIT_START) {
             return this.mapObject[y][x];
         }
         return null;
@@ -79,9 +79,29 @@ class Level {
      */
     setUnitOnMap(x, y, unitIndex) {
         let unit = this.units[unitIndex];
-        this.mapObject[unit.getY()][unit.getX()] = Constants.CELL_TERRAIN_ABLE_TO_PASS;
-        unit.move(x, y);
-        this.mapObject[y][x] = unitIndex;
+        this.setMapObject(unit.getX(), unit.getY(), Constants.CELL_TERRAIN_ABLE_TO_PASS);
+
+        // Get shortest path
+        let path = PathFinding.findShortestPath(this.mapObject, {
+            'x': unit.getX(),
+            'y': unit.getY()
+        }, {
+            'x': x,
+            'y': y
+        });
+        // Move the unit at each step
+        // Exclude the first step since it's the current position
+        let i = 1;
+        let timer = this.scene.time.addEvent({
+            delay: 100,
+            callback: function() {
+                unit.move(path[i].x, path[i].y);
+                i++;
+            },
+            callbackScope: this,
+            repeat: path.length - 2
+        });
+        this.setMapObject(x, y, unitIndex);
     }
 
     /**
@@ -91,7 +111,7 @@ class Level {
      * @param {int} y
      */
     setUnitPosition(index, x, y) {
-        this.mapObject[y][x] = index;
+        this.setMapObject(x, y, index);
         this.units[index].setPosition(x, y);
     }
 
@@ -119,14 +139,14 @@ class Level {
     highlightPaths(arrPath) {
         let arrCells = [];
         for (let i = 0; i < arrPath.length; i++) {
-            let cell = this.scene.add.text(Map.getMapValue(arrPath[i].x, false) + 1, Map.getMapValue(arrPath[i].y, false) + 1, '', {
-                backgroundColor: 'rgb(66, 135, 245)',
+            let cell = this.scene.add.text(Map.getMapValue(arrPath[i].x, false), Map.getMapValue(arrPath[i].y, false), '', {
+                backgroundColor: 'rgb(66, 135, 245, 0.5)',
                 padding: {
                     left: 10,
                     top: 10
                 }
             });
-            cell.setFixedSize(30, 30);
+            cell.setFixedSize(Constants.MAP_CELL_SIZE, Constants.MAP_CELL_SIZE);
             arrCells.push(cell);
         }
         return arrCells;

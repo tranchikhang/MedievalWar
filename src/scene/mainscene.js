@@ -73,6 +73,11 @@ class MainScene extends Phaser.Scene {
         if (isSelectDown) {
             if (this.currentMode == Constants.MODE_UNIT_MOVE) {
                 // PLayer is moving unit
+                // Check if there is already an unit there
+                let unit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
+                if (unit !== null) {
+                    return;
+                }
                 // Check if unit can move to this cell or not
                 for (let i = 0; i < this.possiblePaths.length; i++) {
                     if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
