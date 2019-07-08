@@ -14,6 +14,8 @@ class Cursor {
         // used for animation, temporary disabled
         // this.scene.load.image('cursor', 'assets/small.png');
 
+        // enabled flag
+        this.isEnabled = true;
     }
 
     /**
@@ -51,6 +53,9 @@ class Cursor {
      * @return {none}
      */
     moveUp() {
+        if (!this.isEnabled) {
+            return;
+        }
         let y = this.currentY - 1;
         if (this.isOutOfMap(this.currentX, y)) {
             return;
@@ -65,6 +70,9 @@ class Cursor {
      * @return {none}
      */
     moveDown() {
+        if (!this.isEnabled) {
+            return;
+        }
         let y = this.currentY + 1;
         if (this.isOutOfMap(this.currentX, y)) {
             return;
@@ -79,6 +87,9 @@ class Cursor {
      * @return {none}
      */
     moveLeft() {
+        if (!this.isEnabled) {
+            return;
+        }
         let x = this.currentX - 1;
         if (this.isOutOfMap(x, this.currentY)) {
             return;
@@ -93,6 +104,9 @@ class Cursor {
      * @return {none}
      */
     moveRight() {
+        if (!this.isEnabled) {
+            return;
+        }
         let x = this.currentX + 1;
         if (this.isOutOfMap(x, this.currentY)) {
             return;
@@ -102,11 +116,35 @@ class Cursor {
         this.cursor.setX(x);
     }
 
+    /**
+     * Get unit position Y
+     * @return {int}
+     */
     getX() {
         return this.currentX;
     }
 
+    /**
+     * Get unit position Y
+     * @return {int}
+     */
     getY() {
         return this.currentY;
+    }
+
+    /**
+     * Enable the cursor
+     * @return {none}
+     */
+    enable() {
+        this.isEnabled = true;
+    }
+
+    /**
+     * Disable the cursor
+     * @return {none}
+     */
+    disable() {
+        this.isEnabled = false;
     }
 }

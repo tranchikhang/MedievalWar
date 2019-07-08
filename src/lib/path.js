@@ -1,5 +1,5 @@
 class PathFinding {
-    static get surroundingCell() {
+    static get surroundingTile() {
         return [{
             x: 0,
             y: -1
@@ -38,17 +38,17 @@ class PathFinding {
             let currentPos = queue.shift();
 
             // Explore surrounding
-            for (let i = 0; i < this.surroundingCell.length; i++) {
+            for (let i = 0; i < this.surroundingTile.length; i++) {
                 let newPos = {
-                    x: currentPos.x + this.surroundingCell[i].x,
-                    y: currentPos.y + this.surroundingCell[i].y
+                    x: currentPos.x + this.surroundingTile[i].x,
+                    y: currentPos.y + this.surroundingTile[i].y
                 };
                 if (newPos.x == end.x && newPos.y == end.y) {
                     // Found end position, get full path from start to end
                     newPos.parent = currentPos;
                     return this.traceback(newPos);
-                } else if (map[newPos.y][newPos.x] == Constants.CELL_TERRAIN_ABLE_TO_PASS ||
-                    map[newPos.y][newPos.x] >= Constants.CELL_PLAYER_UNIT_START) {
+                } else if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
+                    map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited
@@ -82,10 +82,10 @@ class PathFinding {
 
     /**
      * Find all possible moves from starting position
-     * @param  {[type]} map
-     * @param  {[type]} start
-     * @param  {[type]} range unit move range
-     * @return {array} result list of possible moves cell
+     * @param  {array} map array map data
+     * @param  {object} start object with x and y
+     * @param  {int} range unit move range
+     * @return {array} result list of possible moves tile
      */
     static findPathWithinRange(map, start, range) {
         let queue = [{
@@ -99,7 +99,7 @@ class PathFinding {
             let row = [];
             visited.push(row);
         }
-        visited[start.y][start.x] = Constants.CELL_PLAYER_UNIT_START;
+        visited[start.y][start.x] = Constants.TILE_PLAYER_UNIT_START;
         while (queue.length > 0) {
             // Get current position
             let currentPos = queue.shift();
@@ -108,13 +108,13 @@ class PathFinding {
                 break;
 
             // Explore surrounding
-            for (let i = 0; i < this.surroundingCell.length; i++) {
+            for (let i = 0; i < this.surroundingTile.length; i++) {
                 let newPos = {
-                    x: currentPos.x + this.surroundingCell[i].x,
-                    y: currentPos.y + this.surroundingCell[i].y
+                    x: currentPos.x + this.surroundingTile[i].x,
+                    y: currentPos.y + this.surroundingTile[i].y
                 };
-                if (map[newPos.y][newPos.x] == Constants.CELL_TERRAIN_ABLE_TO_PASS ||
-                    map[newPos.y][newPos.x] >= Constants.CELL_PLAYER_UNIT_START) {
+                if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
+                    map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited

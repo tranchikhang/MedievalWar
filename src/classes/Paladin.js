@@ -21,13 +21,23 @@ class Paladin extends BaseClass {
         this.loadSpritesheet();
     }
 
+    /**
+     * Draw sprite at specified location
+     * @param  {int} x
+     * @param  {int} y
+     * @return {none}
+     */
     drawStanding(x, y) {
         if (this.sprite) {
             this.sprite.destroy();
         }
-        this.sprite = this.scene.add.sprite(x, y, this.name).play(this.standingAnimationKey).setScale(1.5);
+        this.sprite = this.scene.add.sprite(x, y, this.name, 115).setScale(1.5);
     }
 
+    /**
+     * Load sprite into cache
+     * @return {none}
+     */
     loadSpritesheet() {
         this.scene.load.spritesheet(
             this.name,
@@ -37,17 +47,10 @@ class Paladin extends BaseClass {
             });
     }
 
-    createAnimation() {
-        this.scene.anims.create({
-            key: this.standingAnimationKey,
-            frames: this.scene.anims.generateFrameNumbers(this.name, {
-                frames: [115]
-            }),
-            frameRate: 3,
-            repeat: -1
-        });
-    }
-
+    /**
+     * Remove sprite
+     * @return {none}
+     */
     destroy() {
         this.sprite.destroy();
     }

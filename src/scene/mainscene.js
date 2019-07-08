@@ -17,12 +17,13 @@ class MainScene extends Phaser.Scene {
 
         // Variable to store array of possible moving paths in unit moving mode
         this.possiblePaths = [];
-        this.possibleCells = [];
+        this.possibleTiles = [];
     }
 
     preload() {
         this.load.image('Toens_Medieval_v.1.0', Config.ASSET_PATH + 'tilesets/Toens_Medieval_v.1.0.png');
-        // Create first level
+        this.load.tilemapTiledJSON('level1', 'src/level/level1.json');
+        // Create level
         this.currentLevel = new Level1(this);
         // Create game control
         this.cursor = new Cursor(this, this.currentLevel);
@@ -30,14 +31,13 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+        // Load level
+        this.currentLevel.load();
         // Initialize the map
-        const map = this.make.tilemap({
-            data: this.currentLevel.getMap(),
-            tileWidth: Constants.ACTUAL_CELL_SIZE,
-            tileHeight: Constants.ACTUAL_CELL_SIZE
-        });
-        const tiles = map.addTilesetImage('Toens_Medieval_v.1.0');
-        const layer = map.createStaticLayer(0, tiles, 0, 0).setScale(2);
+        let map = this.add.tilemap('level1');
+        var tileset = map.addTilesetImage('Toens_Medieval_Strategy','Toens_Medieval_v.1.0');
+        var backgroundLayer = map.createStaticLayer('Background', tileset).setScale(2);
+        var backgroundLayer2 = map.createStaticLayer('Top', tileset).setScale(2);
 
         // Init unit on this level
         this.currentLevel.createUnits();
@@ -78,14 +78,19 @@ class MainScene extends Phaser.Scene {
                 if (unit !== null) {
                     return;
                 }
-                // Check if unit can move to this cell or not
+                // Check if unit can move to this tile or not
                 for (let i = 0; i < this.possiblePaths.length; i++) {
                     if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
+                        // Disable the cursor
+                        // NOT WORKING
+                        this.cursor.disable();
                         // Clear highlighted paths
-                        this.currentLevel.removeHighlightPaths(this.possibleCells);
-                        // Move unit to selected cell
+                        this.currentLevel.removeHighlightPaths(this.possibleTiles);
+                        // Move unit to selected tile
                         this.currentLevel.setUnitOnMap(this.cursor.getX(), this.cursor.getY(), this.selectedUnit);
                         this.clearMode();
+                        // Enable the cursor
+                        this.cursor.enable();
                         break;
                     }
                 }
@@ -111,7 +116,7 @@ class MainScene extends Phaser.Scene {
                 // Reset mode flag
                 this.clearMode();
                 // Clear highlighted paths
-                this.currentLevel.removeHighlightPaths(this.possibleCells);
+                this.currentLevel.removeHighlightPaths(this.possibleTiles);
             }
         }
     }
@@ -129,7 +134,7 @@ class MainScene extends Phaser.Scene {
                     },
                     sys.scene.currentLevel.getCurrentUnitObject(sys.scene.selectedUnit).moveRange);
                 // Hightlight all paths
-                sys.scene.possibleCells = sys.scene.currentLevel.highlightPaths(sys.scene.possiblePaths);
+                sys.scene.possibleTiles = sys.scene.currentLevel.highlightPaths(sys.scene.possiblePaths);
                 break;
             default:
         }

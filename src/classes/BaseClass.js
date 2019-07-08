@@ -42,8 +42,8 @@ class BaseClass {
 
     /**
      * Set unit position on map
-     * @param {[type]} x [description]
-     * @param {[type]} y [description]
+     * @param {int} x [description]
+     * @param {int} y [description]
      */
     setPosition(x, y) {
         this.currentX = x;
@@ -52,7 +52,7 @@ class BaseClass {
 
     /**
      * Get unit position X
-     * @return {[type]} [description]
+     * @return {int}
      */
     getX() {
         return this.currentX;
@@ -60,7 +60,7 @@ class BaseClass {
 
     /**
      * Get unit position Y
-     * @return {[type]} [description]
+     * @return {int}
      */
     getY() {
         return this.currentY;

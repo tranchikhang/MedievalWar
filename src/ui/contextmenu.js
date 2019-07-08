@@ -3,7 +3,7 @@ class ContextMenu {
     constructor(scene) {
         // Current scene
         this.scene = scene;
-        this.positionX = Constants.MAP_CELL_SIZE * 3;
+        this.positionX = Constants.MAP_TILE_SIZE * 3;
         this.positionY = 0;
 
         // Menu action list
@@ -13,8 +13,8 @@ class ContextMenu {
 
         // Graphical menu action list
         this.actionListMenu = [];
-        this.width = Constants.MAP_CELL_SIZE * 3;
-        this.height = Constants.MAP_CELL_SIZE;
+        this.width = Constants.MAP_TILE_SIZE * 3;
+        this.height = Constants.MAP_TILE_SIZE;
 
         this.cursor = null;
         this.cursorGeometry = null;
@@ -23,7 +23,7 @@ class ContextMenu {
         // Create list of possible action
         // For now, just load all the default action
         for (var i = 0; i < this.actionListText.length; i++) {
-            var option = this.scene.add.text(this.positionX, this.positionY + Constants.MAP_CELL_SIZE * i, this.actionListText[i], {
+            var option = this.scene.add.text(this.positionX, this.positionY + Constants.MAP_TILE_SIZE * i, this.actionListText[i], {
                 backgroundColor: 'rgb(66, 135, 245)',
                 padding: {
                     left: 10,
@@ -44,20 +44,20 @@ class ContextMenu {
                 color: 0xff0000
             }
         });
-        this.cursorGeometry = new Phaser.Geom.Rectangle(this.positionX, this.positionY, this.width, Constants.MAP_CELL_SIZE);
+        this.cursorGeometry = new Phaser.Geom.Rectangle(this.positionX, this.positionY, this.width, Constants.MAP_TILE_SIZE);
         this.cursor.clear();
         this.cursor.strokeRectShape(this.cursorGeometry).setVisible(false);
     }
 
     /**
      * Show the context menu
-     * @return {}
+     * @return {none}
      */
     show(x, y) {
         // -1 to fit with border
         for (var i = 0; i < this.actionListMenu.length; i++) {
-            this.actionListMenu[i].setX(x * Constants.MAP_CELL_SIZE + this.width - 1);
-            this.actionListMenu[i].setY(y * Constants.MAP_CELL_SIZE + i * Constants.MAP_CELL_SIZE - 1);
+            this.actionListMenu[i].setX(x * Constants.MAP_TILE_SIZE + this.width - 1);
+            this.actionListMenu[i].setY(y * Constants.MAP_TILE_SIZE + i * Constants.MAP_TILE_SIZE - 1);
             this.actionListMenu[i].setVisible(true);
         }
         this.cursor.setVisible(true);
@@ -67,7 +67,7 @@ class ContextMenu {
 
     /**
      * Hide the context menu
-     * @return {}
+     * @return {none}
      */
     hide() {
         for (var i = 0; i < this.actionListMenu.length; i++) {
@@ -80,23 +80,23 @@ class ContextMenu {
 
     /**
      * move the cursor up one item
-     * @return {}
+     * @return {none}
      */
     moveCursorUp() {
         if (this.cursorIndex > 0) {
             this.cursorIndex -= 1;
-            this.cursor.setY(this.cursor.y - Constants.MAP_CELL_SIZE);
+            this.cursor.setY(this.cursor.y - Constants.MAP_TILE_SIZE);
         }
     }
 
     /**
      * move the cursor down one item
-     * @return {}
+     * @return {none}
      */
     moveCursorDown() {
         if (this.cursorIndex < this.actionListText.length - 1) {
             this.cursorIndex += 1;
-            this.cursor.setY(this.cursor.y + Constants.MAP_CELL_SIZE);
+            this.cursor.setY(this.cursor.y + Constants.MAP_TILE_SIZE);
         }
     }
 

@@ -1,34 +1,36 @@
 class Level {
 
-    constructor(scene, map) {
+    constructor(scene, key) {
         this.scene = scene;
-        // Map data
-        this.map = map;
-        // Map size
-        this.width = null;
-        this.height = null;
+        // Map key in cache
+        this.key = key;
+
+        // Map
+        this.map = [];
+
         // Store object position on map, including terrain, units etc
         this.mapObject = [];
         // List units
         this.units = [];
+    }
 
+    load() {
+        let data = this.scene.cache.json.get(this.key);
+        // Map size
+        this.width = data.width;
+        this.height = data.height;
         // Create map object
-        for (var y = 0; y < this.map.length; y++) {
-            var row = [];
-            for (var x = 0; x < this.map[y].length; x++) {
-                // Depends on type of cell, the unit can cross that cell or not
-                row.push(CellData.CELL_TYPE[this.map[y][x]].moveType);
+
+        for (let y = 0; y < this.height; y++) {
+            let mapRow = data.layers[1].data.splice(0, this.width);
+            this.map.push(mapRow);
+            let row = [];
+            for (let x = 0; x < this.width; x++) {
+                // Depends on type of tile, the unit can cross that tile or not
+                row.push(TileData.TILE_TYPE[this.map[y][x]].moveType);
             }
             this.mapObject.push(row);
         }
-    }
-
-    /**
-     * return map width cell data
-     * @return {array}
-     */
-    getMap() {
-        return this.map;
     }
 
     /**
@@ -50,13 +52,13 @@ class Level {
     }
 
     /**
-     * Get unit index at specified cell
+     * Get unit index at specified tile
      * @param  {int} x
      * @param  {int} y
-     * @return {int|null} return unit index if that cell has a unit, else return null
+     * @return {int|null} return unit index if that tile has a unit, else return null
      */
     getUnitOnMap(x, y) {
-        if (this.mapObject[y][x] >= Constants.CELL_PLAYER_UNIT_START) {
+        if (this.mapObject[y][x] >= Constants.TILE_PLAYER_UNIT_START) {
             return this.mapObject[y][x];
         }
         return null;
@@ -79,7 +81,7 @@ class Level {
      */
     setUnitOnMap(x, y, unitIndex) {
         let unit = this.units[unitIndex];
-        this.setMapObject(unit.getX(), unit.getY(), Constants.CELL_TERRAIN_ABLE_TO_PASS);
+        this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
 
         // Get shortest path
         let path = PathFinding.findShortestPath(this.mapObject, {
@@ -133,33 +135,33 @@ class Level {
 
     /**
      * Highlight all possible moving paths
-     * @param  {array} arrPath array of cell
-     * @return {arr} arrCells array of highlighted cells
+     * @param  {array} arrPath array of tile
+     * @return {arr} arrTiles array of highlighted tiles
      */
     highlightPaths(arrPath) {
-        let arrCells = [];
+        let arrTiles = [];
         for (let i = 0; i < arrPath.length; i++) {
-            let cell = this.scene.add.text(Map.getMapValue(arrPath[i].x, false), Map.getMapValue(arrPath[i].y, false), '', {
+            let tile = this.scene.add.text(Map.getMapValue(arrPath[i].x, false), Map.getMapValue(arrPath[i].y, false), '', {
                 backgroundColor: 'rgb(66, 135, 245, 0.5)',
                 padding: {
                     left: 10,
                     top: 10
                 }
             });
-            cell.setFixedSize(Constants.MAP_CELL_SIZE, Constants.MAP_CELL_SIZE);
-            arrCells.push(cell);
+            tile.setFixedSize(Constants.MAP_TILE_SIZE, Constants.MAP_TILE_SIZE);
+            arrTiles.push(tile);
         }
-        return arrCells;
+        return arrTiles;
     }
 
     /**
      * Remove all highlighted paths
-     * @param  {array} arrPath array of cell
+     * @param  {array} arrTiles array of tile
      * @return {none}
      */
-    removeHighlightPaths(arrCells) {
-        for (let i = 0; i < arrCells.length; i++) {
-            arrCells[i].setVisible(false);
+    removeHighlightPaths(arrTiles) {
+        for (let i = 0; i < arrTiles.length; i++) {
+            arrTiles[i].setVisible(false);
         }
     }
 }
