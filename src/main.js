@@ -1,9 +1,9 @@
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 400,
+    width: Config.WindowWidth,
+    height: Config.WindowHeight,
     parent: 'main-game',
-    scene: [MainScene, UIScene]
+    scene: [GameMenu, MainScene, UIScene]
 };
 
 var game = new Phaser.Game(config);

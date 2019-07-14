@@ -42,6 +42,15 @@ class Level {
     }
 
     /**
+     * Get value on map object
+     * @param {int} x
+     * @param {int} y
+     */
+    getObject(x, y) {
+        return this.mapObject[y][x];
+    }
+
+    /**
      * Set value on map object
      * @param {int} x
      * @param {int} y
@@ -141,8 +150,12 @@ class Level {
     highlightPaths(arrPath) {
         let arrTiles = [];
         for (let i = 0; i < arrPath.length; i++) {
+            // Don't hightligh allies
+            if (this.getObject(arrPath[i].x, arrPath[i].y) >= Constants.TILE_PLAYER_UNIT_START) {
+                continue;
+            }
             let tile = this.scene.add.text(Map.getMapValue(arrPath[i].x, false), Map.getMapValue(arrPath[i].y, false), '', {
-                backgroundColor: 'rgb(66, 135, 245, 0.5)',
+                backgroundColor: '#4287F580',
                 padding: {
                     left: 10,
                     top: 10

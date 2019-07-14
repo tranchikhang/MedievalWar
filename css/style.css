@@ -20,8 +20,3 @@ html, body {
 #main-game {
     flex-basis: 100%;
 }
-
-#guide {
-    flex-basis: 100%;
-    color: white;
-}

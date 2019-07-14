@@ -15,5 +15,8 @@ class Control {
         // Select and cancel buttons
         this.keySelect = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.keyCancel = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+
+        // Enter key
+        this.keyEnter = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     }
 }

@@ -22,7 +22,6 @@ class MainScene extends Phaser.Scene {
 
     preload() {
         this.load.image('Toens_Medieval_v.1.0', Config.ASSET_PATH + 'tilesets/Toens_Medieval_v.1.0.png');
-        this.load.tilemapTiledJSON('level1', 'src/level/level1.json');
         // Create level
         this.currentLevel = new Level1(this);
         // Create game control
@@ -35,7 +34,7 @@ class MainScene extends Phaser.Scene {
         this.currentLevel.load();
         // Initialize the map
         let map = this.add.tilemap('level1');
-        var tileset = map.addTilesetImage('Toens_Medieval_Strategy','Toens_Medieval_v.1.0');
+        var tileset = map.addTilesetImage('Toens_Medieval_Strategy', 'Toens_Medieval_v.1.0');
         var backgroundLayer = map.createStaticLayer('Background', tileset).setScale(2);
         var backgroundLayer2 = map.createStaticLayer('Top', tileset).setScale(2);
 
@@ -124,17 +123,18 @@ class MainScene extends Phaser.Scene {
     afterResume(sys, data) {
         switch (data) {
             case Constants.ACTION_MOVE:
+                let scene = sys.scene;
                 // Switch to unit moving mode
-                sys.scene.currentMode = Constants.MODE_UNIT_MOVE;
+                scene.currentMode = Constants.MODE_UNIT_MOVE;
                 // Get all possible moving paths
-                sys.scene.possiblePaths = PathFinding.findPathWithinRange(
-                    sys.scene.currentLevel.getMapObject(), {
-                        'x': sys.scene.cursor.getX(),
-                        'y': sys.scene.cursor.getY()
+                scene.possiblePaths = PathFinding.findPathWithinRange(
+                    scene.currentLevel.getMapObject(), {
+                        'x': scene.cursor.getX(),
+                        'y': scene.cursor.getY()
                     },
-                    sys.scene.currentLevel.getCurrentUnitObject(sys.scene.selectedUnit).moveRange);
+                    scene.currentLevel.getCurrentUnitObject(scene.selectedUnit).moveRange);
                 // Hightlight all paths
-                sys.scene.possibleTiles = sys.scene.currentLevel.highlightPaths(sys.scene.possiblePaths);
+                scene.possibleTiles = scene.currentLevel.highlightPaths(scene.possiblePaths);
                 break;
             default:
         }

@@ -24,7 +24,7 @@ class ContextMenu {
         // For now, just load all the default action
         for (var i = 0; i < this.actionListText.length; i++) {
             var option = this.scene.add.text(this.positionX, this.positionY + Constants.MAP_TILE_SIZE * i, this.actionListText[i], {
-                backgroundColor: 'rgb(66, 135, 245)',
+                backgroundColor: '#4287f5',
                 padding: {
                     left: 10,
                     top: 10
@@ -54,6 +54,8 @@ class ContextMenu {
      * @return {none}
      */
     show(x, y) {
+        // Default menu will show on the right
+        // But if there is no space then
         // -1 to fit with border
         for (var i = 0; i < this.actionListMenu.length; i++) {
             this.actionListMenu[i].setX(x * Constants.MAP_TILE_SIZE + this.width - 1);

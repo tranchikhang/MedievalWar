@@ -4,7 +4,7 @@ class Level1 extends Level {
         super(scene, 'level1');
 
         // Path to json file
-        this.jsonFile = 'src/level/level1.json';
+        this.jsonFile = 'assets/level/level1.json';
         // Load json file into cache
         this.scene.load.tilemapTiledJSON('level1', this.jsonFile);
         this.scene.load.json('level1', this.jsonFile);
