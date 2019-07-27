@@ -10,7 +10,7 @@ class Map {
 	 * @param  {Boolean} isCenter if true, then get the center position of a tile
 	 * @return {int} map value in pixel
 	 */
-	static getMapValue(gridValue, isCenter = true) {
+	static getMapValue(gridValue, isCenter = false) {
 		if (isCenter) {
 			return Constants.MAP_TILE_SIZE * gridValue + Constants.MAP_TILE_SIZE / 2;
 		}

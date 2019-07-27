@@ -4,10 +4,10 @@ class Config {
     }
 
     static get WindowWidth() {
-        return 800;
+        return Map.getMapValue(Constants.VIEW_PORT_WIDTH);
     }
 
     static get WindowHeight() {
-        return 400;
+        return Map.getMapValue(Constants.VIEW_PORT_HEIGHT);
     }
 }

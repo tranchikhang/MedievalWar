@@ -46,6 +46,11 @@ class MainScene extends Phaser.Scene {
 
         // Screen resume event handling
         this.events.on('resume', this.afterResume);
+
+        // camera
+        this.camera = this.cameras.main;
+        // this.camera.setViewport(0, 0, Map.getMapValue(Constants.VIEW_PORT_WIDTH), Map.getMapValue(Constants.VIEW_PORT_HEIGHT));
+        // this.camera.setBounds(0, 0, this.currentLevel.getWidth(), this.currentLevel.getHeight());
     }
     update() {
         var isUpDown = this.input.keyboard.checkDown(this.control.keyUp, 100);
@@ -71,7 +76,7 @@ class MainScene extends Phaser.Scene {
         let isSelectDown = Phaser.Input.Keyboard.JustDown(this.control.keySelect);
         if (isSelectDown) {
             if (this.currentMode == Constants.MODE_UNIT_MOVE) {
-                // PLayer is moving unit
+                // Player is moving unit
                 // Check if there is already an unit there
                 let unit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
                 if (unit !== null) {
@@ -80,16 +85,11 @@ class MainScene extends Phaser.Scene {
                 // Check if unit can move to this tile or not
                 for (let i = 0; i < this.possiblePaths.length; i++) {
                     if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
-                        // Disable the cursor
-                        // NOT WORKING
-                        this.cursor.disable();
                         // Clear highlighted paths
                         this.currentLevel.removeHighlightPaths(this.possibleTiles);
                         // Move unit to selected tile
-                        this.currentLevel.setUnitOnMap(this.cursor.getX(), this.cursor.getY(), this.selectedUnit);
+                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor, this.control);
                         this.clearMode();
-                        // Enable the cursor
-                        this.cursor.enable();
                         break;
                     }
                 }

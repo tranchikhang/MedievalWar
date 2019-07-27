@@ -3,18 +3,17 @@ class ContextMenu {
     constructor(scene) {
         // Current scene
         this.scene = scene;
-        this.positionX = Constants.MAP_TILE_SIZE * 3;
-        this.positionY = 0;
 
         // Menu action list
-        this.ACTION_MOVE = 'Move'
-        this.ACTION_WAIT = 'Wait'
-        this.actionListText = [Constants.ACTION_MOVE, Constants.ACTION_WAIT];
+        this.actionListText = [lang['action.move'], lang['action.wait'], lang['action.attack']];
+        this.actionListValue = [Constants.ACTION_MOVE, Constants.ACTION_WAIT, Constants.ACTION_ATTACK];
 
         // Graphical menu action list
         this.actionListMenu = [];
-        this.width = Constants.MAP_TILE_SIZE * 3;
-        this.height = Constants.MAP_TILE_SIZE;
+        // Width is 3 tiles, height is 1 tile
+        this.menuWidth = Map.getMapValue(3);
+        this.menuHeight = Map.getMapValue(1);
+        this.menuOffsetX = Map.getMapValue(3);
 
         this.cursor = null;
         this.cursorGeometry = null;
@@ -23,7 +22,7 @@ class ContextMenu {
         // Create list of possible action
         // For now, just load all the default action
         for (var i = 0; i < this.actionListText.length; i++) {
-            var option = this.scene.add.text(this.positionX, this.positionY + Constants.MAP_TILE_SIZE * i, this.actionListText[i], {
+            var option = this.scene.add.text(0, 0 + Map.getMapValue(i), this.actionListText[i], {
                 backgroundColor: '#4287f5',
                 padding: {
                     left: 10,
@@ -31,7 +30,8 @@ class ContextMenu {
                 }
             }).setVisible(false);
             // Set text box size
-            option.setFixedSize(this.width, this.height);
+            option.setFixedSize(this.menuWidth, this.menuHeight);
+            option.actionValue = this.actionListValue[i];
             this.actionListMenu.push(option);
         }
 
@@ -44,27 +44,42 @@ class ContextMenu {
                 color: 0xff0000
             }
         });
-        this.cursorGeometry = new Phaser.Geom.Rectangle(this.positionX, this.positionY, this.width, Constants.MAP_TILE_SIZE);
+        this.cursorGeometry = new Phaser.Geom.Rectangle(0, 0, this.menuWidth, Constants.MAP_TILE_SIZE);
         this.cursor.clear();
         this.cursor.strokeRectShape(this.cursorGeometry).setVisible(false);
     }
 
     /**
      * Show the context menu
-     * @return {none}
+     * @param  {int} x selected position's
+     * @param  {int} y selected position'y
+     * @return {none}   [description]
      */
     show(x, y) {
-        // Default menu will show on the right
-        // But if there is no space then
-        // -1 to fit with border
+        let isRightMenu = true;
+        if (Map.getMapValue(x) + this.menuWidth + this.menuOffsetX>= Config.WindowWidth) {
+            isRightMenu = false;
+        }
         for (var i = 0; i < this.actionListMenu.length; i++) {
-            this.actionListMenu[i].setX(x * Constants.MAP_TILE_SIZE + this.width - 1);
-            this.actionListMenu[i].setY(y * Constants.MAP_TILE_SIZE + i * Constants.MAP_TILE_SIZE - 1);
+            // Default menu will show on the right
+            // But if there is no space then show the menu on the left
+            if (isRightMenu) {
+                // -1 to fit with border
+                this.actionListMenu[i].setX(Map.getMapValue(x) + this.menuWidth - 1);
+            } else {
+                // -1 to fit with border
+                this.actionListMenu[i].setX(Map.getMapValue(x) - this.menuWidth - this.menuOffsetX - 1);
+            }
+            this.actionListMenu[i].setY(Map.getMapValue(y) + Map.getMapValue(i) - 1);
             this.actionListMenu[i].setVisible(true);
         }
         this.cursor.setVisible(true);
-        this.cursor.setX(Map.getMapValue(x, false));
-        this.cursor.setY(Map.getMapValue(y, false));
+        if (isRightMenu) {
+            this.cursor.setX(Map.getMapValue(x) + this.menuOffsetX);
+        } else {
+            this.cursor.setX(Map.getMapValue(x) - this.menuWidth - this.menuOffsetX);
+        }
+        this.cursor.setY(Map.getMapValue(y));
     }
 
     /**
@@ -107,6 +122,6 @@ class ContextMenu {
      * @return {string} action
      */
     select() {
-        return this.actionListText[this.cursorIndex];
+        return this.actionListValue[this.cursorIndex];
     }
 }

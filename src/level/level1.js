@@ -16,12 +16,12 @@ class Level1 extends Level {
 
     createUnits() {
         // Draw character
-        this.pal.drawStanding(Map.getMapValue(2), Map.getMapValue(2));
+        this.pal.drawStanding(Map.getMapValue(2, true), Map.getMapValue(2, true));
         this.units.push(this.pal);
         // Set position on map
         this.setUnitPosition(0, 2, 2);
 
-        this.pal2.drawStanding(Map.getMapValue(3), Map.getMapValue(4));
+        this.pal2.drawStanding(Map.getMapValue(3, true), Map.getMapValue(4, true));
         this.units.push(this.pal2);
         // Set position on map
         this.setUnitPosition(1, 3, 4);

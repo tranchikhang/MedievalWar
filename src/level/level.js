@@ -84,11 +84,16 @@ class Level {
 
     /**
      * Set unit postion by setting unit index as value on object map
-     * @param {int} x
-     * @param {int} y
-     * @param {int} unitIndex
+     * @param {int} unitIndex current unit index in unit array
+     * @param {object} cursor
+     * @param {object} control
      */
-    setUnitOnMap(x, y, unitIndex) {
+    setUnitOnMap(unitIndex, cursor, control) {
+        // Disable the cursor and control
+        cursor.disable();
+        control.disable();
+        let x = cursor.getX();
+        let y = cursor.getY();
         let unit = this.units[unitIndex];
         this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
 
@@ -108,6 +113,11 @@ class Level {
             callback: function() {
                 unit.move(path[i].x, path[i].y);
                 i++;
+                if (i == path.length) {
+                    // Enable the cursor and control when unit arrived at destination
+                    cursor.enable();
+                    control.enable();
+                }
             },
             callbackScope: this,
             repeat: path.length - 2
@@ -154,7 +164,7 @@ class Level {
             if (this.getObject(arrPath[i].x, arrPath[i].y) >= Constants.TILE_PLAYER_UNIT_START) {
                 continue;
             }
-            let tile = this.scene.add.text(Map.getMapValue(arrPath[i].x, false), Map.getMapValue(arrPath[i].y, false), '', {
+            let tile = this.scene.add.text(Map.getMapValue(arrPath[i].x), Map.getMapValue(arrPath[i].y), '', {
                 backgroundColor: '#4287F580',
                 padding: {
                     left: 10,

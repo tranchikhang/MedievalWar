@@ -34,8 +34,8 @@ class BaseClass {
     move(x, y) {
         this.currentX = x;
         this.currentY = y;
-        x = Map.getMapValue(x);
-        y = Map.getMapValue(y);
+        x = Map.getMapValue(x, true);
+        y = Map.getMapValue(y, true);
         this.sprite.setX(x);
         this.sprite.setY(y);
     }

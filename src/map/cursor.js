@@ -28,8 +28,8 @@ class Cursor {
         this.cursor = this.scene.add.image(0, 0, 'cursor');
         this.currentX = x;
         this.currentY = y;
-        var x = Map.getMapValue(x);
-        var y = Map.getMapValue(y);
+        var x = Map.getMapValue(x, true);
+        var y = Map.getMapValue(y, true);
         this.cursor.setX(x);
         this.cursor.setY(y);
     }
@@ -41,78 +41,113 @@ class Cursor {
      * @return {Boolean}
      */
     isOutOfMap(x, y) {
-        if (x < 0 || x >= this.level.getWidth() || y < 0 || y >= this.level.getHeight()) {
+        if (x == -1 || x == this.level.getWidth() || y == -1 || y == this.level.getHeight()) {
             return true;
         }
         return false;
     }
 
-
     /**
-     * move cursor up
+     * Move cursor up
      * @return {none}
      */
     moveUp() {
         if (!this.isEnabled) {
             return;
         }
+        // New position
         let y = this.currentY - 1;
+        // Check if new position is out of map
         if (this.isOutOfMap(this.currentX, y)) {
             return;
         }
+        // If new position is at map border, then no need to move the camera
+        if (0 < y && y < this.level.getHeight() - 1) {
+            if (Map.getMapValue(y) == (this.scene.camera.worldView.top)) {
+                // Move viewport up
+                this.scene.camera.scrollY = this.scene.camera.scrollY - Map.getMapValue(1);
+            }
+        }
         this.currentY -= 1;
-        y = Map.getMapValue(this.currentY);
+        y = Map.getMapValue(this.currentY, true);
         this.cursor.setY(y);
     }
 
     /**
-     * move cursor down
+     * Move cursor down
      * @return {none}
      */
     moveDown() {
         if (!this.isEnabled) {
             return;
         }
+        // New position
         let y = this.currentY + 1;
+        // Check if new position is out of map
         if (this.isOutOfMap(this.currentX, y)) {
             return;
         }
+        // If new position is at map border, then no need to move the camera
+        if (0 < y && y < this.level.getHeight() - 1) {
+            if (Map.getMapValue(y) == (this.scene.camera.worldView.bottom - Map.getMapValue(1))) {
+                // Move viewport down
+                this.scene.camera.scrollY = this.scene.camera.scrollY + Map.getMapValue(1);
+            }
+        }
         this.currentY += 1;
-        y = Map.getMapValue(this.currentY);
+        y = Map.getMapValue(this.currentY, true);
         this.cursor.setY(y);
     }
 
     /**
-     * move cursor left
+     * Move cursor left
      * @return {none}
      */
     moveLeft() {
         if (!this.isEnabled) {
             return;
         }
+        // New position
         let x = this.currentX - 1;
+        // Check if new position is out of map
         if (this.isOutOfMap(x, this.currentY)) {
             return;
         }
+        // If new position is at map border, then no need to move the camera
+        if (0 < x && x < this.level.getWidth() - 1) {
+            if (Map.getMapValue(x) == (this.scene.camera.worldView.left)) {
+                // Move viewport left
+                this.scene.camera.scrollX = this.scene.camera.scrollX - Map.getMapValue(1);
+            }
+        }
         this.currentX -= 1;
-        x = Map.getMapValue(this.currentX);
+        x = Map.getMapValue(this.currentX, true);
         this.cursor.setX(x);
     }
 
     /**
-     * move cursor right
+     * Move cursor right
      * @return {none}
      */
     moveRight() {
         if (!this.isEnabled) {
             return;
         }
+        // New position
         let x = this.currentX + 1;
+        // Check if new position is out of map
         if (this.isOutOfMap(x, this.currentY)) {
             return;
         }
+        // If new position is at map border, then no need to move the camera
+        if (0 < x && x < this.level.getWidth() - 1) {
+            // Move viewport right
+            if (Map.getMapValue(x) == (this.scene.camera.worldView.right - Map.getMapValue(1))) {
+                this.scene.camera.scrollX = this.scene.camera.scrollX + Map.getMapValue(1);
+            }
+        }
         this.currentX += 1;
-        x = Map.getMapValue(this.currentX);
+        x = Map.getMapValue(this.currentX, true);
         this.cursor.setX(x);
     }
 
