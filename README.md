@@ -4,7 +4,7 @@ Medieval War is a turn-based strategy game I created in my free time for educati
 
 ## Components
 The game can be broken down into components list as below.
-
+<details><summary>The game can be broken down into components list as below. Click to see.</summary>
 1. Core gameplay
     1. Map
         1. Map data
@@ -16,11 +16,13 @@ The game can be broken down into components list as below.
         5. Context menu
             * List action
             * Interaction
+        6. Camera
     2. Unit
-        1. Initialize unit
+        1. Initialize units
         2. Movement
             * Movable location
             * Path finding
+            * Actions
     3. Attack enemy unit
     4. Ally Support
     5. Battle system
@@ -38,12 +40,14 @@ The game can be broken down into components list as below.
     2. Unit equipment
     3. Trade
     4. Shop
+</details>
+
 
 ## Assets
 
 ### Graphics
 * [https://opengameart.org/content/toens-medieval-strategy-sprite-pack-v10-16x16](https://opengameart.org/content/toens-medieval-strategy-sprite-pack-v10-16x16) by Toen (CC-BY 3.0)
 
-## Licence
+## License
 
-This project is under MIT Licence.
+This project is under MIT License.
