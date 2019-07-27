@@ -4,19 +4,17 @@ Medieval War is a turn-based strategy game I created in my free time for educati
 
 ## Components
 The game can be broken down into components list as below.
-<details><summary>The game can be broken down into components list as below. Click to see.</summary>
 1. Core gameplay
     1. Map
-        1. Map data
-        2. Map loading
-        3. Cursor
-        4. Control
+        1. Map data and loading
+        2. Cursor
+        3. Control
             * Interaction (Select, Cancel etc)
             * Movement
-        5. Context menu
+        4. Context menu
             * List action
             * Interaction
-        6. Camera
+        5. Camera
     2. Unit
         1. Initialize units
         2. Movement
@@ -40,8 +38,6 @@ The game can be broken down into components list as below.
     2. Unit equipment
     3. Trade
     4. Shop
-</details>
-
 
 ## Assets
 
