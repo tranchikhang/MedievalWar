@@ -8,11 +8,9 @@ class Cursor {
         this.level = level;
         this.scene.load.image('cursor', Config.ASSET_PATH + 'cursor.png');
 
-        // currentX and currentY are used to store postion on grid
+        // currentX and currentY are used to store position on grid
         this.currentX = 0;
         this.currentY = 0;
-        // used for animation, temporary disabled
-        // this.scene.load.image('cursor', 'assets/small.png');
 
         // enabled flag
         this.isEnabled = true;
@@ -64,8 +62,8 @@ class Cursor {
         // If new position is at map border, then no need to move the camera
         if (0 < y && y < this.level.getHeight() - 1) {
             if (Map.getMapValue(y) == (this.scene.camera.worldView.top)) {
-                // Move viewport up
-                this.scene.camera.scrollY = this.scene.camera.scrollY - Map.getMapValue(1);
+                // Move view port up
+                this.scene.camera.scrollY(-1);
             }
         }
         this.currentY -= 1;
@@ -90,8 +88,8 @@ class Cursor {
         // If new position is at map border, then no need to move the camera
         if (0 < y && y < this.level.getHeight() - 1) {
             if (Map.getMapValue(y) == (this.scene.camera.worldView.bottom - Map.getMapValue(1))) {
-                // Move viewport down
-                this.scene.camera.scrollY = this.scene.camera.scrollY + Map.getMapValue(1);
+                // Move view port down
+                this.scene.camera.scrollY(1);
             }
         }
         this.currentY += 1;
@@ -116,8 +114,8 @@ class Cursor {
         // If new position is at map border, then no need to move the camera
         if (0 < x && x < this.level.getWidth() - 1) {
             if (Map.getMapValue(x) == (this.scene.camera.worldView.left)) {
-                // Move viewport left
-                this.scene.camera.scrollX = this.scene.camera.scrollX - Map.getMapValue(1);
+                // Move view port left
+                this.scene.camera.scrollX(-1);
             }
         }
         this.currentX -= 1;
@@ -141,9 +139,9 @@ class Cursor {
         }
         // If new position is at map border, then no need to move the camera
         if (0 < x && x < this.level.getWidth() - 1) {
-            // Move viewport right
+            // Move view port right
             if (Map.getMapValue(x) == (this.scene.camera.worldView.right - Map.getMapValue(1))) {
-                this.scene.camera.scrollX = this.scene.camera.scrollX + Map.getMapValue(1);
+                this.scene.camera.scrollX(1);
             }
         }
         this.currentX += 1;
@@ -152,7 +150,7 @@ class Cursor {
     }
 
     /**
-     * Get unit position Y
+     * Get cursor position X on grid
      * @return {int}
      */
     getX() {
@@ -160,11 +158,27 @@ class Cursor {
     }
 
     /**
-     * Get unit position Y
+     * Get cursor position Y on grid
      * @return {int}
      */
     getY() {
         return this.currentY;
+    }
+
+    /**
+     * Get cursor position X
+     * @return {int}
+     */
+    getCursorX() {
+        return this.getX() - this.scene.camera.getOffsetX();
+    }
+
+    /**
+     * Get cursor position Y
+     * @return {int}
+     */
+    getCursorY() {
+        return this.getY() - this.scene.camera.getOffsetY();
     }
 
     /**

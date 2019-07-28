@@ -27,6 +27,8 @@ class MainScene extends Phaser.Scene {
         // Create game control
         this.cursor = new Cursor(this, this.currentLevel);
         this.control = new Control(this);
+        // camera
+        this.camera = new Camera(this);
     }
 
     create() {
@@ -46,11 +48,6 @@ class MainScene extends Phaser.Scene {
 
         // Screen resume event handling
         this.events.on('resume', this.afterResume);
-
-        // camera
-        this.camera = this.cameras.main;
-        // this.camera.setViewport(0, 0, Map.getMapValue(Constants.VIEW_PORT_WIDTH), Map.getMapValue(Constants.VIEW_PORT_HEIGHT));
-        // this.camera.setBounds(0, 0, this.currentLevel.getWidth(), this.currentLevel.getHeight());
     }
     update() {
         var isUpDown = this.input.keyboard.checkDown(this.control.keyUp, 100);
@@ -100,8 +97,9 @@ class MainScene extends Phaser.Scene {
                 if (this.selectedUnit !== null) {
                     this.scene.pause('MainScene');
                     this.scene.run('UIScene', {
-                        'positionX': this.cursor.getX(),
-                        'positionY': this.cursor.getY()
+                        // Get cursor position on camera
+                        'positionX': this.cursor.getCursorX(),
+                        'positionY': this.cursor.getCursorY()
                     });
                 }
             }
@@ -133,7 +131,7 @@ class MainScene extends Phaser.Scene {
                         'y': scene.cursor.getY()
                     },
                     scene.currentLevel.getCurrentUnitObject(scene.selectedUnit).moveRange);
-                // Hightlight all paths
+                // Highlight all paths
                 scene.possibleTiles = scene.currentLevel.highlightPaths(scene.possiblePaths);
                 break;
             default:

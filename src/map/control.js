@@ -41,7 +41,7 @@ class Control {
 
     /**
      * Enable all keys
-     * @return {[type]} [description]
+     * @return {none}
      */
     enable() {
         // Basic move button

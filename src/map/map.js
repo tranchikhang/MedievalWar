@@ -4,7 +4,7 @@
 class Map {
 
 	/**
-	 * Get postion in pixel on map
+	 * Get position in pixel on map
 	 * for example grid map value is 2, then the result is 34*2
 	 * @param  {int} gridValue grid value
 	 * @param  {Boolean} isCenter if true, then get the center position of a tile

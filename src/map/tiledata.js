@@ -15,7 +15,7 @@ class TileData {
                 'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '12': {
-                'name': 'moutain',
+                'name': 'mountain',
                 'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
             },
             '13': {
@@ -32,19 +32,19 @@ class TileData {
             },
             '31': {
                 'name': 'fortress',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '35': {
                 'name': 'fortress',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '52': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '53': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '54': {
                 'name': 'castle',
@@ -64,11 +64,11 @@ class TileData {
             },
             '59': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '60': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
             },
             '92': {
                 'name': 'river',

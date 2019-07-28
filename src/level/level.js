@@ -83,7 +83,7 @@ class Level {
     }
 
     /**
-     * Set unit postion by setting unit index as value on object map
+     * Set unit position by setting unit index as value on object map
      * @param {int} unitIndex current unit index in unit array
      * @param {object} cursor
      * @param {object} control
@@ -160,7 +160,7 @@ class Level {
     highlightPaths(arrPath) {
         let arrTiles = [];
         for (let i = 0; i < arrPath.length; i++) {
-            // Don't hightligh allies
+            // Don't highlight allies
             if (this.getObject(arrPath[i].x, arrPath[i].y) >= Constants.TILE_PLAYER_UNIT_START) {
                 continue;
             }

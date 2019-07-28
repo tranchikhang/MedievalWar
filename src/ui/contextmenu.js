@@ -51,8 +51,8 @@ class ContextMenu {
 
     /**
      * Show the context menu
-     * @param  {int} x selected position's
-     * @param  {int} y selected position'y
+     * @param  {int} x selected position x
+     * @param  {int} y selected position y
      * @return {none}   [description]
      */
     show(x, y) {
@@ -96,7 +96,7 @@ class ContextMenu {
     }
 
     /**
-     * move the cursor up one item
+     * Move the cursor up one item
      * @return {none}
      */
     moveCursorUp() {
@@ -107,7 +107,7 @@ class ContextMenu {
     }
 
     /**
-     * move the cursor down one item
+     * Move the cursor down one item
      * @return {none}
      */
     moveCursorDown() {
