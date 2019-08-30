@@ -11,7 +11,8 @@ class Level {
         // Store object position on map, including terrain, units etc
         this.mapObject = [];
         // List units
-        this.units = [];
+        this.playerUnits = [];
+        this.enemyUnits = [];
     }
 
     load() {
@@ -67,7 +68,7 @@ class Level {
      * @return {int|null} return unit index if that tile has a unit, else return null
      */
     getUnitOnMap(x, y) {
-        if (this.mapObject[y][x] >= Constants.TILE_PLAYER_UNIT_START) {
+        if (this.mapObject[y][x] >= Constants.TILE_PLAYER_UNIT_START && this.mapObject[y][x] < Constants.TILE_ENEMY_UNIT_START) {
             return this.mapObject[y][x];
         }
         return null;
@@ -79,7 +80,7 @@ class Level {
      * @return {object}
      */
     getCurrentUnitObject(index) {
-        return this.units[index];
+        return this.playerUnits[index];
     }
 
     /**
@@ -94,7 +95,8 @@ class Level {
         control.disable();
         let x = cursor.getX();
         let y = cursor.getY();
-        let unit = this.units[unitIndex];
+        let unit = this.playerUnits[unitIndex];
+        // Set current unit position to terrain value
         this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
 
         // Get shortest path
@@ -122,6 +124,7 @@ class Level {
             callbackScope: this,
             repeat: path.length - 2
         });
+        // Set unit index at new position
         this.setMapObject(x, y, unitIndex);
     }
 
@@ -133,7 +136,11 @@ class Level {
      */
     setUnitPosition(index, x, y) {
         this.setMapObject(x, y, index);
-        this.units[index].setPosition(x, y);
+        if (index < Constants.TILE_ENEMY_UNIT_START) {
+            this.playerUnits[index].setPosition(x, y);
+        } else {
+            this.enemyUnits[index - Constants.TILE_ENEMY_UNIT_START].setPosition(x, y);
+        }
     }
 
     /**

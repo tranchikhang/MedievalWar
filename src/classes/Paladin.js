@@ -17,6 +17,9 @@ class Paladin extends BaseClass {
         this.magicDefense = 5;
         this.moveRange = 9;
 
+        this.allyTexture = 115;
+        this.enemyTexture = 122;
+
         this.moveType = this.MOVE_TYPE_MOUNTED;
         this.loadSpritesheet();
     }
@@ -25,13 +28,14 @@ class Paladin extends BaseClass {
      * Draw sprite at specified location
      * @param  {int} x
      * @param  {int} y
+     * @param  {int} texture
      * @return {none}
      */
-    drawStanding(x, y) {
+    drawStanding(x, y, texture) {
         if (this.sprite) {
             this.sprite.destroy();
         }
-        this.sprite = this.scene.add.sprite(x, y, this.name, 115).setScale(1.5);
+        this.sprite = this.scene.add.sprite(x, y, this.name, texture).setScale(1.5);
     }
 
     /**

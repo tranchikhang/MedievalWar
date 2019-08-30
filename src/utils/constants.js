@@ -21,6 +21,12 @@ class Constants {
         return 0;
     }
 
+    // Enemy units index will start from 30
+    // Unit with index = 30 will have 30 as value on map object
+    static get TILE_ENEMY_UNIT_START() {
+        return 30;
+    }
+
     static get ACTION_MOVE() {
         return 1;
     }

@@ -40,11 +40,11 @@ class TileData {
             },
             '52': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
             },
             '53': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
             },
             '54': {
                 'name': 'castle',
@@ -64,11 +64,11 @@ class TileData {
             },
             '59': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
             },
             '60': {
                 'name': 'town',
-                'moveType': Constants.TILE_TERRAIN_ABLE_TO_PASS
+                'moveType': Constants.TILE_TERRAIN_UNABLE_TO_PASS
             },
             '92': {
                 'name': 'river',
