@@ -53,21 +53,25 @@ class MainScene extends Phaser.Scene {
         var isUpDown = this.input.keyboard.checkDown(this.control.keyUp, 100);
         if (isUpDown) {
             this.cursor.moveUp();
+            this.cursorMovedEvent();
         }
 
         var isDownDown = this.input.keyboard.checkDown(this.control.keyDown, 100);
         if (isDownDown) {
             this.cursor.moveDown();
+            this.cursorMovedEvent();
         }
 
         var isLeftDown = this.input.keyboard.checkDown(this.control.keyLeft, 100);
         if (isLeftDown) {
             this.cursor.moveLeft();
+            this.cursorMovedEvent();
         }
 
         var isRightDown = this.input.keyboard.checkDown(this.control.keyRight, 100);
         if (isRightDown) {
             this.cursor.moveRight();
+            this.cursorMovedEvent();
         }
 
         let isSelectDown = Phaser.Input.Keyboard.JustDown(this.control.keySelect);
@@ -140,5 +144,19 @@ class MainScene extends Phaser.Scene {
 
     clearMode() {
         this.currentMode = '';
+    }
+
+    cursorMovedEvent() {
+        let unit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
+        if (unit === null) {
+            if (this.statusMenu) {
+                this.statusMenu.hide();
+            }
+            return;
+        }
+        if (!this.statusMenu) {
+            this.statusMenu = new StatusMenu(this, this.currentLevel);
+        }
+        this.statusMenu.show(this.cursor.getX(), this.cursor.getY(), this.currentLevel.getCurrentUnitObject(unit));
     }
 }

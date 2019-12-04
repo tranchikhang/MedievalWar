@@ -10,6 +10,8 @@ class BaseClass {
 
         this.name = 'Base';
 
+        this.health = 0;
+        this.currentHealth = 0;
         this.attack = 0;
         this.magicAttack = 0;
         this.speed = 0;

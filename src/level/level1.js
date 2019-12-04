@@ -11,7 +11,9 @@ class Level1 extends Level {
 
         // Create ally units
         this.pal = new Paladin(this.scene);
+        this.pal.name = 'Paladin 1';
         this.pal2 = new Paladin(this.scene);
+        this.pal2.name = 'Paladin 2';
     }
 
     createUnits() {
