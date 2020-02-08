@@ -18,6 +18,8 @@ class MainScene extends Phaser.Scene {
         // Variable to store array of possible moving paths in unit moving mode
         this.possiblePaths = [];
         this.possibleTiles = [];
+
+        this.turnSystem = null;
     }
 
     preload() {
@@ -29,6 +31,7 @@ class MainScene extends Phaser.Scene {
         this.control = new Control(this);
         // camera
         this.camera = new Camera(this);
+        this.turnSystem = new Turn(this);
     }
 
     create() {
@@ -79,7 +82,7 @@ class MainScene extends Phaser.Scene {
             if (this.currentMode == Constants.MODE_UNIT_MOVE) {
                 // Player is moving unit
                 // Check if there is already an unit there
-                let unit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
+                let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
                 if (unit !== null) {
                     return;
                 }
@@ -89,7 +92,7 @@ class MainScene extends Phaser.Scene {
                         // Clear highlighted paths
                         this.currentLevel.removeHighlightPaths(this.possibleTiles);
                         // Move unit to selected tile
-                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor, this.control);
+                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY(), this.control);
                         this.clearMode();
                         break;
                     }
@@ -97,8 +100,8 @@ class MainScene extends Phaser.Scene {
                 //
             } else {
                 // Check if user selected a character
-                this.selectedUnit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
-                if (this.selectedUnit !== null) {
+                this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
+                if (this.selectedUnit !== null && !this.selectedUnit.isEnemy()) {
                     this.scene.pause('MainScene');
                     this.scene.run('UIScene', {
                         // Get cursor position on camera
@@ -123,9 +126,9 @@ class MainScene extends Phaser.Scene {
     }
 
     afterResume(sys, data) {
+        let scene = sys.scene;
         switch (data) {
             case Constants.ACTION_MOVE:
-                let scene = sys.scene;
                 // Switch to unit moving mode
                 scene.currentMode = Constants.MODE_UNIT_MOVE;
                 // Get all possible moving paths
@@ -134,9 +137,12 @@ class MainScene extends Phaser.Scene {
                         'x': scene.cursor.getX(),
                         'y': scene.cursor.getY()
                     },
-                    scene.currentLevel.getCurrentUnitObject(scene.selectedUnit).moveRange);
+                    scene.selectedUnit.moveRange);
                 // Highlight all paths
                 scene.possibleTiles = scene.currentLevel.highlightPaths(scene.possiblePaths);
+                break;
+            case Constants.ACTION_WAIT:
+                scene.turnSystem.next(scene.selectedUnit);
                 break;
             default:
         }
@@ -147,7 +153,7 @@ class MainScene extends Phaser.Scene {
     }
 
     cursorMovedEvent() {
-        let unit = this.currentLevel.getUnitOnMap(this.cursor.getX(), this.cursor.getY());
+        let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
         if (unit === null) {
             if (this.statusMenu) {
                 this.statusMenu.hide();
@@ -157,6 +163,6 @@ class MainScene extends Phaser.Scene {
         if (!this.statusMenu) {
             this.statusMenu = new StatusMenu(this, this.currentLevel);
         }
-        this.statusMenu.show(this.cursor.getX(), this.cursor.getY(), this.currentLevel.getCurrentUnitObject(unit));
+        this.statusMenu.show(this.cursor.getX(), this.cursor.getY(), unit);
     }
 }

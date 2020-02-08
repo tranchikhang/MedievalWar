@@ -31,6 +31,12 @@ class BaseClass {
         // Position
         this.currentX = 0;
         this.currentY = 0;
+
+        // Index
+        this.index = -1;
+
+        // Flag to indicate unit has finished action
+        this.isFinished = false;
     }
 
     move(x, y) {
@@ -66,6 +72,37 @@ class BaseClass {
      */
     getY() {
         return this.currentY;
+    }
+
+    /**
+     * Check if this unit is enemy
+     * @return {Boolean}
+     */
+    isEnemy() {
+        if (this.index >= Constants.TILE_ENEMY_UNIT_START) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if this unit is player's unit
+     * @return {Boolean}
+     */
+    isPlayer() {
+        if (this.index < Constants.TILE_ENEMY_UNIT_START) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check all available action for this unit
+     * @param  {object} level current level
+     * @return {object} best tile to move to
+     */
+    checkAvailableAction(level) {
+        return Ai.checkWithinRange(level, this);
     }
 
 }

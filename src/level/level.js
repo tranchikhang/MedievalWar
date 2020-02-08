@@ -62,40 +62,38 @@ class Level {
     }
 
     /**
-     * Get unit index at specified tile
+     * Get unit object
+     * @param  {int} index unit index in units list
+     * @return {object}
+     */
+    getUnitByIndex(index) {
+        if (index < Constants.TILE_ENEMY_UNIT_START) {
+            return this.playerUnits[index];
+        } else {
+            return this.enemyUnits[index - Constants.TILE_ENEMY_UNIT_START];
+        }
+    }
+
+    /**
+     * Get unit at specified tile
      * @param  {int} x
      * @param  {int} y
-     * @return {int|null} return unit index if that tile has a unit, else return null
+     * @return {object|null} return unit if that tile has a unit, else return null
      */
-    getUnitOnMap(x, y) {
-        if (this.mapObject[y][x] >= Constants.TILE_PLAYER_UNIT_START && this.mapObject[y][x] < Constants.TILE_ENEMY_UNIT_START) {
-            return this.mapObject[y][x];
+    getUnit(x, y) {
+        if (this.mapObject[y][x] >= Constants.TILE_PLAYER_UNIT_START) {
+            return this.getUnitByIndex(this.mapObject[y][x])
         }
         return null;
     }
 
     /**
-     * Get unit object
-     * @param  {int} index unit index in units list
-     * @return {object}
-     */
-    getCurrentUnitObject(index) {
-        return this.playerUnits[index];
-    }
-
-    /**
      * Set unit position by setting unit index as value on object map
      * @param {int} unitIndex current unit index in unit array
-     * @param {object} cursor
      * @param {object} control
      */
-    setUnitOnMap(unitIndex, cursor, control) {
-        // Disable the cursor and control
-        cursor.disable();
+    setUnitOnMap(unit, x, y, control) {
         control.disable();
-        let x = cursor.getX();
-        let y = cursor.getY();
-        let unit = this.playerUnits[unitIndex];
         // Set current unit position to terrain value
         this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
 
@@ -116,8 +114,7 @@ class Level {
                 unit.move(path[i].x, path[i].y);
                 i++;
                 if (i == path.length) {
-                    // Enable the cursor and control when unit arrived at destination
-                    cursor.enable();
+                    // Enable control when unit arrived at destination
                     control.enable();
                 }
             },
@@ -125,7 +122,7 @@ class Level {
             repeat: path.length - 2
         });
         // Set unit index at new position
-        this.setMapObject(x, y, unitIndex);
+        this.setMapObject(x, y, unit.index);
     }
 
     /**
@@ -193,5 +190,21 @@ class Level {
         for (let i = 0; i < arrTiles.length; i++) {
             arrTiles[i].setVisible(false);
         }
+    }
+
+    /**
+     * Get player's units
+     * @return {array}
+     */
+    getPlayerUnits() {
+        return this.playerUnits;
+    }
+
+    /**
+     * Get Enemy units
+     * @return {array}
+     */
+    getEnemyUnits() {
+        return this.enemyUnits;
     }
 }

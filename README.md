@@ -2,6 +2,8 @@
 
 Medieval War is a turn-based strategy game I created in my free time for education purposes, inspired by Fire Emblem series. This game is built in JavaScript using the Phaser 3 Framework.
 
+![](demo.gif)
+
 ## Components
 The game can be broken down into components list as below.
 1. Core gameplay

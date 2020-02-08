@@ -17,7 +17,7 @@ class Paladin extends BaseClass {
         this.speed = 17;
         this.defense = 12;
         this.magicDefense = 5;
-        this.moveRange = 9;
+        this.moveRange = 7;
 
         this.allyTexture = 115;
         this.enemyTexture = 122;

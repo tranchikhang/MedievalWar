@@ -24,11 +24,13 @@ class Level1 extends Level {
     createAllyUnits() {
         // Draw character
         this.pal.drawStanding(Map.getMapValue(2, true), Map.getMapValue(2, true), this.pal.allyTexture);
+        this.pal.index = 0;
         this.playerUnits.push(this.pal);
         // Set position on map
         this.setUnitPosition(0, 2, 2);
 
         this.pal2.drawStanding(Map.getMapValue(3, true), Map.getMapValue(4, true), this.pal2.allyTexture);
+        this.pal2.index = 1;
         this.playerUnits.push(this.pal2);
         // Set position on map
         this.setUnitPosition(1, 3, 4);
@@ -45,6 +47,7 @@ class Level1 extends Level {
             // Draw character
             let pal = new Paladin(this.scene);
             pal.drawStanding(Map.getMapValue(positionList[i][0], true), Map.getMapValue(positionList[i][1], true), pal.enemyTexture);
+            pal.index = Constants.TILE_ENEMY_UNIT_START + i;
             this.enemyUnits.push(pal);
             // Set position on map
             this.setUnitPosition(Constants.TILE_ENEMY_UNIT_START + i, positionList[i][0], positionList[i][1]);
