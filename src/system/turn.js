@@ -1,8 +1,7 @@
 class Turn {
 
-    constructor(scene) {
-        this.control = scene.control;
-        this.currentLevel = scene.currentLevel;
+    constructor(currentLevel) {
+        this.currentLevel = currentLevel;
         this.enemyUnits = this.currentLevel.getEnemyUnits();
         this.playerUnits = this.currentLevel.getPlayerUnits();
         this.playerUnitsMoved = 0;
@@ -22,7 +21,7 @@ class Turn {
             for (var i = this.enemyUnits.length - 1; i >= 0; i--) {
                 let path = this.enemyUnits[i].checkAvailableAction(this.currentLevel);
                 if (path) {
-                    this.currentLevel.setUnitOnMap(this.enemyUnits[i], path.x, path.y, this.control);
+                    this.currentLevel.setUnitOnMap(this.enemyUnits[i], path.x, path.y);
                 }
             }
         }

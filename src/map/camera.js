@@ -3,9 +3,8 @@
  */
 class Camera {
 
-    constructor(scene) {
-        this.scene = scene;
-        this.camera = this.scene.cameras.main;
+    constructor(camera) {
+        this.camera = camera;
         this.worldView = this.camera.worldView;
     }
 

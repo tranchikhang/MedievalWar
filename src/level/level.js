@@ -89,11 +89,12 @@ class Level {
 
     /**
      * Set unit position by setting unit index as value on object map
-     * @param {int} unitIndex current unit index in unit array
-     * @param {object} control
+     * @param {object} unit selected unit
+     * @param {int} x
+     * @param {int} y
      */
-    setUnitOnMap(unit, x, y, control) {
-        control.disable();
+    setUnitOnMap(unit, x, y) {
+        this.scene.control.disable();
         // Set current unit position to terrain value
         this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
 
@@ -115,7 +116,7 @@ class Level {
                 i++;
                 if (i == path.length) {
                     // Enable control when unit arrived at destination
-                    control.enable();
+                    this.scene.control.enable();
                 }
             },
             callbackScope: this,

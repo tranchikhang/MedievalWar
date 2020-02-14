@@ -3,9 +3,9 @@
  */
 class Cursor {
 
-    constructor(scene, level) {
+    constructor(scene) {
         this.scene = scene;
-        this.level = level;
+        this.level = scene.currentLevel;
         this.scene.load.image('cursor', Config.ASSET_PATH + 'cursor.png');
 
         // currentX and currentY are used to store position on grid

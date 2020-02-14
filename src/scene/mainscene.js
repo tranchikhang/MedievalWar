@@ -27,11 +27,11 @@ class MainScene extends Phaser.Scene {
         // Create level
         this.currentLevel = new Level1(this);
         // Create game control
-        this.cursor = new Cursor(this, this.currentLevel);
+        this.cursor = new Cursor(this);
         this.control = new Control(this);
         // camera
-        this.camera = new Camera(this);
-        this.turnSystem = new Turn(this);
+        this.camera = new Camera(this.cameras.main);
+        this.turnSystem = new Turn(this.currentLevel);
     }
 
     create() {
@@ -92,7 +92,7 @@ class MainScene extends Phaser.Scene {
                         // Clear highlighted paths
                         this.currentLevel.removeHighlightPaths(this.possibleTiles);
                         // Move unit to selected tile
-                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY(), this.control);
+                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY());
                         this.clearMode();
                         break;
                     }
