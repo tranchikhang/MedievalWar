@@ -105,4 +105,89 @@ class BaseClass {
         return Ai.checkWithinRange(level, this);
     }
 
+    /**
+     * Draw sprite at specified location
+     * @param  {int} x
+     * @param  {int} y
+     * @param  {int} texture
+     * @return {none}
+     */
+    drawStanding(x, y, texture) {
+        if (this.sprite) {
+            this.sprite.destroy();
+        }
+        this.sprite = this.scene.add.sprite(x, y, this.className, texture).setScale(1.5);
+        this.createFinishedText();
+    }
+
+    /**
+     * Load sprite into cache
+     * @return {none}
+     */
+    loadAsset() {
+        this.scene.load.spritesheet(
+            this.className,
+            this.spritePath + this.spriteFile + this.spriteExtension, {
+                frameWidth: this.frameWidth,
+                frameHeight: this.frameHeight
+            });
+    }
+
+    /**
+     * Check if unit is available to act
+     * @return {Boolean}
+     */
+    isAvailable() {
+        return !this.isFinished;
+    }
+
+    /**
+     * Create "E" letter after unit has finished action
+     * @return {none}
+     */
+    createFinishedText() {
+        this.waitText = this.scene.add.text(Map.getMapValue(this.getX()), Map.getMapValue(this.getY()), 'E', {
+            padding: {
+                left: 10,
+                top: 10
+            }
+        }).setVisible(false);
+    }
+
+    /**
+     * Show "E" letter after unit has finished action
+     * @return {none} [description]
+     */
+    setFinishedText() {
+        this.waitText.setX(Map.getMapValue(this.getX()));
+        this.waitText.setY(Map.getMapValue(this.getY()));
+        this.waitText.setVisible(true);
+    }
+
+    /**
+     * Finished turn
+     * @return {none}
+     */
+    finishAction() {
+        this.isFinished = true;
+        this.setFinishedText();
+    }
+
+    /**
+     * Start turn
+     * @return {none}
+     */
+    startAction() {
+        this.isFinished = false;
+        this.waitText.setVisible(false);
+    }
+
+    /**
+     * Remove sprite
+     * @return {none}
+     */
+    destroy() {
+        this.sprite.destroy();
+    }
+
 }

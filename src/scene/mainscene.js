@@ -101,7 +101,7 @@ class MainScene extends Phaser.Scene {
             } else {
                 // Check if user selected a character
                 this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
-                if (this.selectedUnit !== null && !this.selectedUnit.isEnemy()) {
+                if (this.selectedUnit !== null && !this.selectedUnit.isEnemy() && this.selectedUnit.isAvailable()) {
                     this.scene.pause('MainScene');
                     this.scene.run('UIScene', {
                         // Get cursor position on camera

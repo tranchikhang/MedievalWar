@@ -8,8 +8,13 @@ class Turn {
         this.playerUnitsMoved = 0;
     }
 
+    /**
+     * A unit has finished an action, move to next one
+     * @param  {finished unit}   unit
+     * @return {none}
+     */
     next(unit) {
-        unit.isFinished = true;
+        unit.finishAction();
         this.playerUnitsMoved += 1;
         if (this.playerUnitsMoved == this.playerUnits.length) {
             this.playerUnitsMoved = 0;
@@ -23,9 +28,13 @@ class Turn {
         }
     }
 
+    /**
+     * Reset for new turn
+     * @return {none}
+     */
     reset() {
         for (var i = this.playerUnits.length - 1; i >= 0; i--) {
-            this.playerUnits[i].isFinished = false;
+            this.playerUnits[i].startAction();
         }
     }
 }
