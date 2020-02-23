@@ -94,34 +94,8 @@ class Level {
      * @param {int} y
      */
     setUnitOnMap(unit, x, y) {
-        this.scene.control.disable();
         // Set current unit position to terrain value
         this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
-
-        // Get shortest path
-        let path = PathFinding.findShortestPath(this.mapObject, {
-            'x': unit.getX(),
-            'y': unit.getY()
-        }, {
-            'x': x,
-            'y': y
-        });
-        // Move the unit at each step
-        // Exclude the first step since it's the current position
-        let i = 1;
-        let timer = this.scene.time.addEvent({
-            delay: 100,
-            callback: function() {
-                unit.move(path[i].x, path[i].y);
-                i++;
-                if (i == path.length) {
-                    // Enable control when unit arrived at destination
-                    this.scene.control.enable();
-                }
-            },
-            callbackScope: this,
-            repeat: path.length - 2
-        });
         // Set unit index at new position
         this.setMapObject(x, y, unit.index);
     }

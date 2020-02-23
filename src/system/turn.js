@@ -17,13 +17,14 @@ class Turn {
         this.playerUnitsMoved += 1;
         if (this.playerUnitsMoved == this.playerUnits.length) {
             this.playerUnitsMoved = 0;
-            this.reset();
             for (var i = this.enemyUnits.length - 1; i >= 0; i--) {
                 let path = this.enemyUnits[i].checkAvailableAction(this.currentLevel);
                 if (path) {
                     this.currentLevel.setUnitOnMap(this.enemyUnits[i], path.x, path.y);
+                    this.enemyUnits[i].move(path.x, path.y);
                 }
             }
+            this.reset();
         }
     }
 

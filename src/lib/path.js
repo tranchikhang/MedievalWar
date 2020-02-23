@@ -48,7 +48,8 @@ class PathFinding {
                     newPos.parent = currentPos;
                     return this.traceback(newPos);
                 } else if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
-                    map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START) {
+                    (map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START &&
+                        map[newPos.y][newPos.x] < Constants.TILE_ENEMY_UNIT_START)) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited
@@ -114,7 +115,8 @@ class PathFinding {
                     y: currentPos.y + this.surroundingTile[i].y
                 };
                 if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
-                    map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START) {
+                    (map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START &&
+                        map[newPos.y][newPos.x] < Constants.TILE_ENEMY_UNIT_START)) {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited

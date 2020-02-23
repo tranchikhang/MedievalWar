@@ -47,6 +47,10 @@ class Constants {
         return 'AttackMode';
     }
 
+    static get MODE_CONTEXT_MENU() {
+        return 'ContextMenu';
+    }
+
     static get VIEW_PORT_WIDTH() {
         return 24;
     }

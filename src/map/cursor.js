@@ -166,22 +166,6 @@ class Cursor {
     }
 
     /**
-     * Get cursor position X
-     * @return {int}
-     */
-    getCursorX() {
-        return this.getX() - this.scene.camera.getOffsetX();
-    }
-
-    /**
-     * Get cursor position Y
-     * @return {int}
-     */
-    getCursorY() {
-        return this.getY() - this.scene.camera.getOffsetY();
-    }
-
-    /**
      * Enable the cursor
      * @return {none}
      */

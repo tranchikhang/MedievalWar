@@ -20,6 +20,10 @@ class MainScene extends Phaser.Scene {
         this.possibleTiles = [];
 
         this.turnSystem = null;
+
+        this.contextMenu = null;
+
+        this.unitOriginalPosition = {};
     }
 
     preload() {
@@ -49,37 +53,77 @@ class MainScene extends Phaser.Scene {
         // Load cursor, set starting position
         this.cursor.load(1, 1);
 
-        // Screen resume event handling
-        this.events.on('resume', this.afterResume);
+        // Create menu
+        this.contextMenu = new ContextMenu(this);
     }
+
     update() {
         var isUpDown = this.input.keyboard.checkDown(this.control.keyUp, 100);
         if (isUpDown) {
-            this.cursor.moveUp();
-            this.cursorMovedEvent();
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                this.contextMenu.moveCursorUp();
+            } else {
+                this.cursor.moveUp();
+                this.cursorMovedEvent();
+            }
         }
 
         var isDownDown = this.input.keyboard.checkDown(this.control.keyDown, 100);
         if (isDownDown) {
-            this.cursor.moveDown();
-            this.cursorMovedEvent();
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                this.contextMenu.moveCursorDown();
+            } else {
+                this.cursor.moveDown();
+                this.cursorMovedEvent();
+            }
         }
 
         var isLeftDown = this.input.keyboard.checkDown(this.control.keyLeft, 100);
         if (isLeftDown) {
-            this.cursor.moveLeft();
-            this.cursorMovedEvent();
+            if (this.currentMode != Constants.MODE_CONTEXT_MENU) {
+                this.cursor.moveLeft();
+                this.cursorMovedEvent();
+            }
         }
 
         var isRightDown = this.input.keyboard.checkDown(this.control.keyRight, 100);
         if (isRightDown) {
-            this.cursor.moveRight();
-            this.cursorMovedEvent();
+            if (this.currentMode != Constants.MODE_CONTEXT_MENU) {
+                this.cursor.moveRight();
+                this.cursorMovedEvent();
+            }
         }
 
         let isSelectDown = Phaser.Input.Keyboard.JustDown(this.control.keySelect);
         if (isSelectDown) {
-            if (this.currentMode == Constants.MODE_UNIT_MOVE) {
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                // Check for action
+                let action = this.contextMenu.select();
+                this.contextMenu.hide();
+                switch (action) {
+                    case Constants.ACTION_MOVE:
+                        // Switch to unit moving mode
+                        this.currentMode = Constants.MODE_UNIT_MOVE;
+                        // Get all possible moving paths
+                        this.possiblePaths = PathFinding.findPathWithinRange(
+                            this.currentLevel.getMapObject(), {
+                                'x': this.cursor.getX(),
+                                'y': this.cursor.getY()
+                            },
+                            this.selectedUnit.moveRange);
+                        // Highlight all paths
+                        this.possibleTiles = this.currentLevel.highlightPaths(this.possiblePaths);
+                        break;
+                    case Constants.ACTION_WAIT:
+                        this.turnSystem.next(this.selectedUnit);
+                        this.selectedUnit = null;
+                        this.unitOriginalPosition = {};
+                        // Reset mode flag
+                        this.clearMode();
+                        break;
+                    default:
+                }
+            } else if (this.currentMode == Constants.MODE_UNIT_MOVE) {
                 // Player is moving unit
                 // Check if there is already an unit there
                 let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
@@ -91,8 +135,13 @@ class MainScene extends Phaser.Scene {
                     if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
                         // Clear highlighted paths
                         this.currentLevel.removeHighlightPaths(this.possibleTiles);
+                        this.unitOriginalPosition = {
+                            x: this.selectedUnit.getX(),
+                            y: this.selectedUnit.getY()
+                        }
                         // Move unit to selected tile
                         this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY());
+                        this.selectedUnit.move(this.cursor.getX(), this.cursor.getY());
                         this.clearMode();
                         break;
                     }
@@ -102,12 +151,7 @@ class MainScene extends Phaser.Scene {
                 // Check if user selected a character
                 this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
                 if (this.selectedUnit !== null && !this.selectedUnit.isEnemy() && this.selectedUnit.isAvailable()) {
-                    this.scene.pause('MainScene');
-                    this.scene.run('UIScene', {
-                        // Get cursor position on camera
-                        'positionX': this.cursor.getCursorX(),
-                        'positionY': this.cursor.getCursorY()
-                    });
+                    this.showContextMenu(this.cursor.getX(), this.cursor.getY());
                 }
             }
             this.control.keySelect.isDown = false;
@@ -115,7 +159,18 @@ class MainScene extends Phaser.Scene {
 
         let isCancelPressed = Phaser.Input.Keyboard.JustDown(this.control.keyCancel);
         if (isCancelPressed) {
-            if (this.currentMode == Constants.MODE_UNIT_MOVE) {
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                this.contextMenu.hide();
+                this.clearMode();
+                if (this.unitOriginalPosition.x && this.unitOriginalPosition.y) {
+                    if (this.selectedUnit.getX() != this.unitOriginalPosition.x || this.selectedUnit.getY() != this.unitOriginalPosition.y) {
+                        // Move unit back
+                        this.selectedUnit.move(this.unitOriginalPosition.x, this.unitOriginalPosition.y);
+                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.unitOriginalPosition.x, this.unitOriginalPosition.y);
+                        this.unitOriginalPosition = {};
+                    }
+                }
+            } else if (this.currentMode == Constants.MODE_UNIT_MOVE) {
                 // Exit unit moving action
                 // Reset mode flag
                 this.clearMode();
@@ -125,31 +180,21 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    afterResume(sys, data) {
-        let scene = sys.scene;
-        switch (data) {
-            case Constants.ACTION_MOVE:
-                // Switch to unit moving mode
-                scene.currentMode = Constants.MODE_UNIT_MOVE;
-                // Get all possible moving paths
-                scene.possiblePaths = PathFinding.findPathWithinRange(
-                    scene.currentLevel.getMapObject(), {
-                        'x': scene.cursor.getX(),
-                        'y': scene.cursor.getY()
-                    },
-                    scene.selectedUnit.moveRange);
-                // Highlight all paths
-                scene.possibleTiles = scene.currentLevel.highlightPaths(scene.possiblePaths);
-                break;
-            case Constants.ACTION_WAIT:
-                scene.turnSystem.next(scene.selectedUnit);
-                break;
-            default:
+    afterUnitMoved() {
+        this.control.enable();
+        if (this.unitOriginalPosition.x && this.unitOriginalPosition.y) {
+            this.showContextMenu(this.cursor.getX(), this.cursor.getY());
         }
     }
 
     clearMode() {
         this.currentMode = '';
+    }
+
+    showContextMenu(x, y) {
+        this.currentMode = Constants.MODE_CONTEXT_MENU;
+        // Show menu
+        this.contextMenu.show(x, y);
     }
 
     cursorMovedEvent() {

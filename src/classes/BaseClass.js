@@ -40,12 +40,32 @@ class BaseClass {
     }
 
     move(x, y) {
-        this.currentX = x;
-        this.currentY = y;
-        x = Map.getMapValue(x, true);
-        y = Map.getMapValue(y, true);
-        this.sprite.setX(x);
-        this.sprite.setY(y);
+        // Get shortest path
+        let path = PathFinding.findShortestPath(this.scene.currentLevel.getMapObject(), {
+            'x': this.currentX,
+            'y': this.currentY
+        }, {
+            'x': x,
+            'y': y
+        });
+        // Move the unit at each step
+        // Exclude the first step since it's the current position
+        let i = 1;
+        let timer = this.scene.time.addEvent({
+            delay: 100,
+            callback: function() {
+                this.setPosition(path[i].x, path[i].y);
+                this.sprite.setX(Map.getMapValue(path[i].x, true));
+                this.sprite.setY(Map.getMapValue(path[i].y, true));
+                i++;
+                if (i == path.length) {
+                    // Enable control when unit arrived at destination
+                    this.scene.afterUnitMoved();
+                }
+            },
+            callbackScope: this,
+            repeat: path.length - 2
+        });
     }
 
     /**
