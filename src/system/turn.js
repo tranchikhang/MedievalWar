@@ -37,4 +37,12 @@ class Turn {
             this.playerUnits[i].startAction();
         }
     }
+
+    /**
+     * Check if player finished action on all units
+     * @return {boolean}
+     */
+    checkPlayerFinished() {
+        return this.playerUnitsMoved == this.playerUnits.length - 1;
+    }
 }

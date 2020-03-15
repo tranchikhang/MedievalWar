@@ -23,6 +23,8 @@ class MainScene extends Phaser.Scene {
 
         this.contextMenu = null;
 
+        this.transition = null;
+
         this.unitOriginalPosition = {};
     }
 
@@ -55,6 +57,8 @@ class MainScene extends Phaser.Scene {
 
         // Create menu
         this.contextMenu = new ContextMenu(this);
+
+        this.transition = new Transition(this);
     }
 
     update() {
@@ -115,11 +119,23 @@ class MainScene extends Phaser.Scene {
                         this.possibleTiles = this.currentLevel.highlightPaths(this.possiblePaths);
                         break;
                     case Constants.ACTION_WAIT:
-                        this.turnSystem.next(this.selectedUnit);
-                        this.selectedUnit = null;
-                        this.unitOriginalPosition = {};
-                        // Reset mode flag
-                        this.clearMode();
+                        if (this.turnSystem.checkPlayerFinished()) {
+                            this.transition.show();
+                            setTimeout(() => {
+                                this.transition.hide();
+                                this.turnSystem.next(this.selectedUnit);
+                                this.selectedUnit = null;
+                                this.unitOriginalPosition = {};
+                                // Reset mode flag
+                                this.clearMode();
+                            }, 1000)
+                        } else {
+                            this.turnSystem.next(this.selectedUnit);
+                            this.selectedUnit = null;
+                            this.unitOriginalPosition = {};
+                            // Reset mode flag
+                            this.clearMode();
+                        }
                         break;
                     default:
                 }

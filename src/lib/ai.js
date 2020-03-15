@@ -1,20 +1,4 @@
 class Ai {
-    static get surroundingTile() {
-        return [{
-            x: 0,
-            y: -1
-        }, {
-            x: 1,
-            y: 0
-        }, {
-            x: 0,
-            y: 1
-        }, {
-            x: -1,
-            y: 0
-        }];
-    }
-
 
     /**
      * Check all available action at each tile
@@ -44,17 +28,17 @@ class Ai {
                 break;
 
             // Explore surrounding
-            for (let i = 0; i < this.surroundingTile.length; i++) {
+            for (let i = 0; i < PathFinding.surroundingTile.length; i++) {
                 let newPos = {
-                    x: currentPos.x + this.surroundingTile[i].x,
-                    y: currentPos.y + this.surroundingTile[i].y
+                    x: currentPos.x + PathFinding.surroundingTile[i].x,
+                    y: currentPos.y + PathFinding.surroundingTile[i].y
                 };
+                // if current position is movable
                 if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
                     (map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START &&
                         map[newPos.y][newPos.x] < Constants.TILE_ENEMY_UNIT_START)) {
-                    // if current position is movable
+                    // and haven't visited
                     if (!visited[newPos.y][newPos.x]) {
-                        // and haven't visited
                         queue.push({
                             x: newPos.x,
                             y: newPos.y,
@@ -72,6 +56,10 @@ class Ai {
                                     x: newPos.x,
                                     y: newPos.y
                                 });
+                                // Player unit and enemy are next to each other
+                                if (p.length==2) {
+                                    return null;
+                                }
                                 p.splice(0, 1);
                                 p.splice(p.length - 1, 1);
                                 if (!result || (result && p.length < result.length)) {

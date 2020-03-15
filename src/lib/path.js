@@ -114,12 +114,12 @@ class PathFinding {
                     x: currentPos.x + this.surroundingTile[i].x,
                     y: currentPos.y + this.surroundingTile[i].y
                 };
+                // if current position is movable
                 if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
                     (map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START &&
                         map[newPos.y][newPos.x] < Constants.TILE_ENEMY_UNIT_START)) {
-                    // if current position is movable
+                    // and haven't visited
                     if (!visited[newPos.y][newPos.x]) {
-                        // and haven't visited
                         queue.push({
                             x: newPos.x,
                             y: newPos.y,
