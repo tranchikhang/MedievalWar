@@ -39,7 +39,7 @@ class BaseClass {
         this.isFinished = false;
     }
 
-    move(x, y) {
+    move(x, y, afterMovedFunc) {
         // Get shortest path
         let path = PathFinding.findShortestPath(this.scene.currentLevel.getMapObject(), {
             'x': this.currentX,
@@ -58,9 +58,9 @@ class BaseClass {
                 this.sprite.setX(Map.getMapValue(path[i].x, true));
                 this.sprite.setY(Map.getMapValue(path[i].y, true));
                 i++;
-                if (i == path.length) {
+                if (i == path.length && afterMovedFunc) {
                     // Enable control when unit arrived at destination
-                    this.scene.afterUnitMoved();
+                    afterMovedFunc(this.scene);
                 }
             },
             callbackScope: this,
@@ -200,6 +200,27 @@ class BaseClass {
     startAction() {
         this.isFinished = false;
         this.waitText.setVisible(false);
+    }
+
+    /**
+     * get surrounding tiles
+     * @return {array} 4 tiles position
+     */
+    getSurroundings() {
+        let surroundingTiles = [{
+            x: 0,
+            y: -1
+        }, {
+            x: 1,
+            y: 0
+        }, {
+            x: 0,
+            y: 1
+        }, {
+            x: -1,
+            y: 0
+        }];
+        return surroundingTiles;
     }
 
     /**

@@ -5,8 +5,10 @@ class ContextMenu {
         this.scene = scene;
 
         // Menu action list
-        this.actionListText = [lang['action.move'], lang['action.wait'], lang['action.attack']];
-        this.actionListValue = [Constants.ACTION_MOVE, Constants.ACTION_WAIT, Constants.ACTION_ATTACK];
+        this.dfActionListText = [lang['action.move'], lang['action.wait'], lang['action.attack']];
+        this.actionListText = this.dfActionListText;
+        this.dfActionListValue = [Constants.ACTION_MOVE, Constants.ACTION_WAIT, Constants.ACTION_ATTACK];
+        this.actionListValue = this.dfActionListValue;
 
         // Graphical menu action list
         this.actionListMenu = [];
