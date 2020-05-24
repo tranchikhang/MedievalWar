@@ -16,26 +16,30 @@ class PathFinding {
     }
 
     /**
-     * find shortest path between 2 point using BFS
+     * find shortest path between 2 point using Best First Search
      * @param  {array} map
      * @param  {object} start
      * @param  {object} end
      * @return {array} travel path
      */
     static findShortestPath(map, start, end) {
-        var queue = [{
+        var queue = new PriorityQueue();
+        queue.enqueue({
             x: start.x,
             y: start.y,
             parent: null
-        }];
+        }, 0);
+
+        // 2d array to store visited position
         let visited = [];
         for (let y = 0; y < map.length; y++) {
             let row = [];
             visited.push(row);
         }
-        while (queue.length > 0) {
+
+        while (!queue.isEmpty()) {
             // Get current position
-            let currentPos = queue.shift();
+            let currentPos = queue.dequeue().element;
 
             // Explore surrounding
             for (let i = 0; i < this.surroundingTile.length; i++) {
@@ -53,11 +57,13 @@ class PathFinding {
                     // if current position is movable
                     if (!visited[newPos.y][newPos.x]) {
                         // and haven't visited
-                        queue.push({
+                        // Calculate distance to goal
+                        let d = Math.sqrt( Math.pow((end.x - newPos.x), 2) + Math.pow((end.y - newPos.y), 2) );
+                        queue.enqueue({
                             x: newPos.x,
                             y: newPos.y,
                             parent: currentPos
-                        });
+                        }, d);
                         visited[newPos.y][newPos.x] = 1;
                     }
                 }
