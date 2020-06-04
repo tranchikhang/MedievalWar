@@ -120,7 +120,7 @@ class MainScene extends Phaser.Scene {
                         break;
                     case Constants.ACTION_WAIT:
                         if (this.turnSystem.checkPlayerFinished()) {
-                            this.transition.show();
+                            this.transition.show(lang['end.turn'], this.camera.getOffsetX(), this.camera.getOffsetY());
                             setTimeout(() => {
                                 this.transition.hide();
                                 this.turnSystem.next(this.selectedUnit);

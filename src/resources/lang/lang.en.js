@@ -5,5 +5,6 @@ lang = {
     "start.screen.enter" : "Press Enter to start",
     "action.move" : "Move",
     "action.wait" : "Wait",
-    "action.attack" : "Attack"
+    "action.attack" : "Attack",
+    "end.turn": "End turn"
 };
