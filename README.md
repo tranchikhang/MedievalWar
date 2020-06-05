@@ -19,7 +19,8 @@ The game can be broken down into components list as below.
         5. Camera
     2. Unit
         1. Initialize units - Done
-        2. Movement
+        2. Turn system - Done, need refactoring
+        3. Movement
             * Movable location - Need more testing and code refactoring
             * Path finding - Need more testing and code refactoring
             * Actions - Working on it....
