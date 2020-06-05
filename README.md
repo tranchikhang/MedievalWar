@@ -8,34 +8,34 @@ Medieval War is a turn-based strategy game I created in my free time for educati
 The game can be broken down into components list as below.
 1. Core gameplay
     1. Map
-        1. Map data and loading
-        2. Cursor
+        1. Map data and loading - still need some code refactoring, especially with *level* class
+        2. Cursor - Done for now
         3. Control
             * Interaction (Select, Cancel etc)
-            * Movement
+            * Movement - Done
         4. Context menu
-            * List action
+            * List action - Done
             * Interaction
         5. Camera
     2. Unit
-        1. Initialize units
+        1. Initialize units - Done
         2. Movement
-            * Movable location
-            * Path finding
-            * Actions
-    3. Attack enemy unit
-    4. Ally Support
-    5. Battle system
+            * Movable location - Need more testing and code refactoring
+            * Path finding - Need more testing and code refactoring
+            * Actions - Working on it....
+    3. Attack enemy unit - Not implemented
+    4. Ally Support - Not implemented
+    5. Battle system - Not implemented
         1. Hit - evasion calculation
         2. Damage calculation
         3. Support calculation
-    6. Map objectives
+    6. Map objectives - Not implemented
 2. Character
-    1. Classes
-    2. Character data
-    3. Character sprite - animation
-    4. Leveling system
-3. Items
+    1. Classes - Created base class and a few classes
+    2. Character data - Not implemented
+    3. Character sprite - animation  - No animation for now
+    4. Leveling system - Not implemented
+3. Items - Not implemented
     1. Unit inventory
     2. Unit equipment
     3. Trade
