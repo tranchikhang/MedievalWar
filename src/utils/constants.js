@@ -51,6 +51,18 @@ class Constants {
         return 'ContextMenu';
     }
 
+    static get CONTEXT_MENU_WIDTH() {
+        return Map.getMapValue(3);
+    }
+
+    static get CONTEXT_MENU_HEIGHT() {
+        return Map.getMapValue(1);
+    }
+
+    static get CONTEXT_MENU_OFFSET_X() {
+        return Map.getMapValue(3);
+    }
+
     static get VIEW_PORT_WIDTH() {
         return 24;
     }

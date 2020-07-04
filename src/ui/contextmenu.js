@@ -1,3 +1,32 @@
+class ContextMenuItem {
+    constructor(scene, action, actionValue) {
+        this.action = action;
+        this.actionValue = actionValue;
+
+        this.item = scene.add.text(0, 0, action, {
+            backgroundColor: '#4287f5',
+            padding: {
+                left: 10,
+                top: 10
+            }
+        }).setVisible(false);
+        // Set text box size
+        this.item.setFixedSize(Constants.CONTEXT_MENU_WIDTH, Constants.CONTEXT_MENU_HEIGHT);
+    }
+
+    setX(x) {
+        this.item.setX(x);
+    }
+
+    setY(y) {
+        this.item.setY(y);
+    }
+
+    setVisible(val) {
+        this.item.setVisible(val);
+    }
+}
+
 class ContextMenu {
 
     constructor(scene) {
@@ -12,10 +41,6 @@ class ContextMenu {
 
         // Graphical menu action list
         this.actionListMenu = [];
-        // Width is 3 tiles, height is 1 tile
-        this.menuWidth = Map.getMapValue(3);
-        this.menuHeight = Map.getMapValue(1);
-        this.menuOffsetX = Map.getMapValue(3);
 
         this.cursor = null;
         this.cursorGeometry = null;
@@ -24,16 +49,7 @@ class ContextMenu {
         // Create list of possible action
         // For now, just load all the default action
         for (var i = 0; i < this.actionListText.length; i++) {
-            var option = this.scene.add.text(0, 0 + Map.getMapValue(i), this.actionListText[i], {
-                backgroundColor: '#4287f5',
-                padding: {
-                    left: 10,
-                    top: 10
-                }
-            }).setVisible(false);
-            // Set text box size
-            option.setFixedSize(this.menuWidth, this.menuHeight);
-            option.actionValue = this.actionListValue[i];
+            var option = new ContextMenuItem(scene, this.actionListText[i], this.actionListValue[i]);
             this.actionListMenu.push(option);
         }
 
@@ -46,7 +62,7 @@ class ContextMenu {
                 color: 0xff0000
             }
         });
-        this.cursorGeometry = new Phaser.Geom.Rectangle(0, 0, this.menuWidth, Constants.MAP_TILE_SIZE);
+        this.cursorGeometry = new Phaser.Geom.Rectangle(0, 0, Constants.CONTEXT_MENU_WIDTH, Constants.MAP_TILE_SIZE);
         this.cursor.clear();
         this.cursor.strokeRectShape(this.cursorGeometry).setVisible(false);
     }
@@ -59,27 +75,29 @@ class ContextMenu {
      */
     show(x, y) {
         let isRightMenu = true;
-        if (Map.getMapValue(x) + this.menuWidth + this.menuOffsetX>= Config.WindowWidth) {
+        if (Map.getMapValue(x) + Constants.CONTEXT_MENU_WIDTH + Constants.CONTEXT_MENU_OFFSET_X >= Config.WindowWidth) {
             isRightMenu = false;
         }
+
+        // Calculate which option to display
         for (var i = 0; i < this.actionListMenu.length; i++) {
             // Default menu will show on the right
             // But if there is no space then show the menu on the left
             if (isRightMenu) {
                 // -1 to fit with border
-                this.actionListMenu[i].setX(Map.getMapValue(x) + this.menuWidth - 1);
+                this.actionListMenu[i].setX(Map.getMapValue(x) + Constants.CONTEXT_MENU_WIDTH - 1);
             } else {
                 // -1 to fit with border
-                this.actionListMenu[i].setX(Map.getMapValue(x) - this.menuWidth - this.menuOffsetX - 1);
+                this.actionListMenu[i].setX(Map.getMapValue(x) - Constants.CONTEXT_MENU_WIDTH - Constants.CONTEXT_MENU_OFFSET_X - 1);
             }
             this.actionListMenu[i].setY(Map.getMapValue(y) + Map.getMapValue(i) - 1);
             this.actionListMenu[i].setVisible(true);
         }
         this.cursor.setVisible(true);
         if (isRightMenu) {
-            this.cursor.setX(Map.getMapValue(x) + this.menuOffsetX);
+            this.cursor.setX(Map.getMapValue(x) + Constants.CONTEXT_MENU_OFFSET_X);
         } else {
-            this.cursor.setX(Map.getMapValue(x) - this.menuWidth - this.menuOffsetX);
+            this.cursor.setX(Map.getMapValue(x) - Constants.CONTEXT_MENU_WIDTH - Constants.CONTEXT_MENU_OFFSET_X);
         }
         this.cursor.setY(Map.getMapValue(y));
     }
