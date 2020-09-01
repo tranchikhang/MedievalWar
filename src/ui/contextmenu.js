@@ -33,25 +33,11 @@ class ContextMenu {
         // Current scene
         this.scene = scene;
 
-        // Menu action list
-        this.dfActionListText = [lang['action.move'], lang['action.wait'], lang['action.attack']];
-        this.actionListText = this.dfActionListText;
-        this.dfActionListValue = [Constants.ACTION_MOVE, Constants.ACTION_WAIT, Constants.ACTION_ATTACK];
-        this.actionListValue = this.dfActionListValue;
-
-        // Graphical menu action list
-        this.actionListMenu = [];
+        this.createAction();
 
         this.cursor = null;
         this.cursorGeometry = null;
         this.cursorIndex = 0;
-
-        // Create list of possible action
-        // For now, just load all the default action
-        for (var i = 0; i < this.actionListText.length; i++) {
-            var option = new ContextMenuItem(scene, this.actionListText[i], this.actionListValue[i]);
-            this.actionListMenu.push(option);
-        }
 
         this.cursor = this.scene.add.graphics({
             lineStyle: {
@@ -68,12 +54,52 @@ class ContextMenu {
     }
 
     /**
+     * Create context menu action list
+     * @return {none}
+     */
+    createAction() {
+        // Graphical menu action list
+        // this.actionListMenu = [];
+
+        // Menu action list
+        this.actionList = {};
+        this.actionList[Constants.ACTION_ATTACK] = new ContextMenuItem(this.scene, lang['action.attack'], Constants.ACTION_ATTACK);
+        this.actionList[Constants.ACTION_MOVE] = new ContextMenuItem(this.scene, lang['action.move'], Constants.ACTION_MOVE);
+        this.actionList[Constants.ACTION_WAIT] = new ContextMenuItem(this.scene, lang['action.wait'], Constants.ACTION_WAIT);
+    }
+
+    /**
+     * Update list of actions which selected unit can perform
+     * Called when selecting unit or after unit moved
+     * @param  {BaseClass} unit selected unit
+     * @return {none}
+     */
+    updateAction(unit) {
+        // reset graphical menu action list
+        this.actionListMenu = [];
+
+        let lstEnemies = unit.checkAttackable();
+        if (lstEnemies.length > 0) {
+            this.actionListMenu.push(this.actionList[Constants.ACTION_ATTACK]);
+        }
+
+        if (unit.checkMoveable()) {
+            this.actionListMenu.push(this.actionList[Constants.ACTION_MOVE]);
+        }
+
+        // Menu action list
+        this.actionListMenu.push(this.actionList[Constants.ACTION_WAIT]);
+    }
+
+    /**
      * Show the context menu
-     * @param  {int} x selected position x
-     * @param  {int} y selected position y
+     * @param  {unit} current selected unit
      * @return {none}   [description]
      */
-    show(x, y) {
+    show(unit) {
+        this.updateAction(unit);
+        let x = unit.getX();
+        let y = unit.getY();
         let isRightMenu = true;
         if (Map.getMapValue(x) + Constants.CONTEXT_MENU_WIDTH + Constants.CONTEXT_MENU_OFFSET_X >= Config.WindowWidth) {
             isRightMenu = false;
@@ -131,7 +157,7 @@ class ContextMenu {
      * @return {none}
      */
     moveCursorDown() {
-        if (this.cursorIndex < this.actionListText.length - 1) {
+        if (this.cursorIndex < this.actionListMenu.length - 1) {
             this.cursorIndex += 1;
             this.cursor.setY(this.cursor.y + Constants.MAP_TILE_SIZE);
         }
@@ -142,6 +168,6 @@ class ContextMenu {
      * @return {string} action
      */
     select() {
-        return this.actionListValue[this.cursorIndex];
+        return this.actionListMenu[this.cursorIndex].actionValue;
     }
 }

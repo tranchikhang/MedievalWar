@@ -231,4 +231,31 @@ class BaseClass {
         this.sprite.destroy();
     }
 
+    /**
+     * Check surrounding if there is any enemy to attack
+     * @return {array} array of enemies
+     */
+    checkAttackable() {
+        let s = this.getSurroundings();
+        let lstEnemies = [];
+        for (var j = 0; j < s.length; j++) {
+            let currentX = this.getX() + s[j].x;
+            let currentY = this.getY() + s[j].y;
+            let enemy = this.scene.currentLevel.getUnit(currentX, currentY);
+            if (enemy !== null) {
+                lstEnemies.push(enemy);
+            }
+        }
+        return lstEnemies;
+    }
+
+    /**
+     * Check if unit can move (not blocked from 4 sides)
+     * TODO
+     * @return {boolean}
+     */
+    checkMoveable() {
+        return true;
+    }
+
 }

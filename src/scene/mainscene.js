@@ -160,7 +160,7 @@ class MainScene extends Phaser.Scene {
                         // Move unit to selected tile
                         this.control.disable();
                         this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY());
-                        this.selectedUnit.move(this.cursor.getX(), this.cursor.getY(), this.afterUnitMoved);
+                        this.selectedUnit.move(this.cursor.getX(), this.cursor.getY(), this.unitMovedEvent);
                         this.clearMode();
                         break;
                     }
@@ -170,7 +170,7 @@ class MainScene extends Phaser.Scene {
                 // Check if user selected a character
                 this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
                 if (this.selectedUnit !== null && !this.selectedUnit.isEnemy() && this.selectedUnit.isAvailable()) {
-                    this.showContextMenu(this.cursor.getX(), this.cursor.getY());
+                    this.showContextMenu(this.selectedUnit);
                 }
             }
             this.control.keySelect.isDown = false;
@@ -199,23 +199,11 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    afterUnitMoved(scene) {
+    unitMovedEvent(scene) {
         // Enable control
         scene.control.enable();
-        // Check surrounding
-        let s = scene.selectedUnit.getSurroundings();
-        let lstEnemies = [];
-        for (var j = 0; j < s.length; j++) {
-            let currentX = scene.selectedUnit.getX() + s[j].x;
-            let currentY = scene.selectedUnit.getY() + s[j].y;
-            let enemy = scene.currentLevel.getUnit(currentX, currentY);
-            if (enemy !== null) {
-                lstEnemies.push(enemy);
-            }
-        }
-        // If there are enemy units around, display attach option
         if (scene.unitOriginalPosition.x && scene.unitOriginalPosition.y) {
-            scene.showContextMenu(scene.cursor.getX(), scene.cursor.getY());
+            scene.showContextMenu(scene.selectedUnit);
         }
     }
 
@@ -223,10 +211,10 @@ class MainScene extends Phaser.Scene {
         this.currentMode = '';
     }
 
-    showContextMenu(x, y) {
+    showContextMenu(unit) {
         this.currentMode = Constants.MODE_CONTEXT_MENU;
         // Show menu
-        this.contextMenu.show(x, y);
+        this.contextMenu.show(unit);
     }
 
     cursorMovedEvent() {
