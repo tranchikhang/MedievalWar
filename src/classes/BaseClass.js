@@ -35,6 +35,9 @@ class BaseClass {
         // Index
         this.index = -1;
 
+        // Flag to indicate unit has moved
+        this.isMoved = false;
+
         // Flag to indicate unit has finished action
         this.isFinished = false;
     }
@@ -66,6 +69,7 @@ class BaseClass {
             callbackScope: this,
             repeat: path.length - 2
         });
+        this.isMoved = true;
     }
 
     /**
@@ -76,6 +80,14 @@ class BaseClass {
     setPosition(x, y) {
         this.currentX = x;
         this.currentY = y;
+    }
+
+    /**
+     * Set unit moving status
+     * @param {Boolean} isMoved at init: false, set to True after user selected "Wait"
+     */
+    setMoveStatus(isMoved) {
+        this.isMoved = isMoved;
     }
 
     /**
@@ -242,7 +254,7 @@ class BaseClass {
             let currentX = this.getX() + s[j].x;
             let currentY = this.getY() + s[j].y;
             let enemy = this.scene.currentLevel.getUnit(currentX, currentY);
-            if (enemy !== null) {
+            if (enemy !== null && enemy.isEnemy()) {
                 lstEnemies.push(enemy);
             }
         }

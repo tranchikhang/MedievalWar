@@ -83,7 +83,7 @@ class ContextMenu {
             this.actionListMenu.push(this.actionList[Constants.ACTION_ATTACK]);
         }
 
-        if (unit.checkMoveable()) {
+        if (!unit.isMoved && unit.checkMoveable()) {
             this.actionListMenu.push(this.actionList[Constants.ACTION_MOVE]);
         }
 

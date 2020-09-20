@@ -124,6 +124,7 @@ class MainScene extends Phaser.Scene {
                             setTimeout(() => {
                                 this.transition.hide();
                                 this.turnSystem.next(this.selectedUnit);
+                                this.selectedUnit.setMoveStatus(false);
                                 this.selectedUnit = null;
                                 this.unitOriginalPosition = {};
                                 // Reset mode flag
