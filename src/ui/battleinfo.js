@@ -1,4 +1,4 @@
-class Transition {
+class BattleInfo {
 
     constructor(scene) {
         // Current scene

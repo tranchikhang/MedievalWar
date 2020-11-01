@@ -10,4 +10,8 @@ class Config {
     static get WindowHeight() {
         return Map.getMapValue(Constants.VIEW_PORT_HEIGHT);
     }
+
+    static get DialogTransitionTime() {
+        return 1000;
+    }
 }

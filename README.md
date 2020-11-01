@@ -23,8 +23,12 @@ The game can be broken down into components list as below.
         3. Movement
             * Movable location - Need more testing and code refactoring
             * Path finding - Need more testing and code refactoring
-            * Actions - Working on it....
-    3. Attack enemy unit - Not implemented
+            * Actions - In progress
+    3. Attack enemy unit - In progress
+        * Detect enemy unit - Done
+        * Select the unit to attack by moving cursor - Done
+        * Show damage, hit rate etc calculation
+        * If user choose to attack, update unit status after attack (HP etc) - Done
     4. Ally Support - Not implemented
     5. Battle system - Not implemented
         1. Hit - evasion calculation

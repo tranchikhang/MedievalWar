@@ -20,10 +20,12 @@ class MainScene extends Phaser.Scene {
         this.possibleTiles = [];
 
         this.turnSystem = null;
+        this.battleSystem = null;
 
         this.contextMenu = null;
 
         this.transition = null;
+        this.battleInfo = null;
 
         this.unitOriginalPosition = {};
     }
@@ -38,6 +40,7 @@ class MainScene extends Phaser.Scene {
         // camera
         this.camera = new Camera(this.cameras.main);
         this.turnSystem = new Turn(this.currentLevel);
+        this.battleSystem = new BattleSystem(this.currentLevel);
     }
 
     create() {
@@ -59,6 +62,7 @@ class MainScene extends Phaser.Scene {
         this.contextMenu = new ContextMenu(this);
 
         this.transition = new Transition(this);
+        this.battleInfo = new BattleInfo(this);
     }
 
     update() {
@@ -66,6 +70,11 @@ class MainScene extends Phaser.Scene {
         if (isUpDown) {
             if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
                 this.contextMenu.moveCursorUp();
+            } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Switch to next enemy
+                let e = this.battleSystem.getNextEnemyInList();
+                this.cursor.set(e.getX(), e.getY());
+                this.cursorMovedEvent();
             } else {
                 this.cursor.moveUp();
                 this.cursorMovedEvent();
@@ -76,6 +85,11 @@ class MainScene extends Phaser.Scene {
         if (isDownDown) {
             if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
                 this.contextMenu.moveCursorDown();
+            } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Switch to previous enemy
+                let e = this.battleSystem.getPrevEnemyInList();
+                this.cursor.set(e.getX(), e.getY());
+                this.cursorMovedEvent();
             } else {
                 this.cursor.moveDown();
                 this.cursorMovedEvent();
@@ -84,7 +98,12 @@ class MainScene extends Phaser.Scene {
 
         var isLeftDown = this.input.keyboard.checkDown(this.control.keyLeft, 100);
         if (isLeftDown) {
-            if (this.currentMode != Constants.MODE_CONTEXT_MENU) {
+            if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Switch to previous enemy
+                let e = this.battleSystem.getPrevEnemyInList();
+                this.cursor.set(e.getX(), e.getY());
+                this.cursorMovedEvent();
+            } else {
                 this.cursor.moveLeft();
                 this.cursorMovedEvent();
             }
@@ -92,7 +111,12 @@ class MainScene extends Phaser.Scene {
 
         var isRightDown = this.input.keyboard.checkDown(this.control.keyRight, 100);
         if (isRightDown) {
-            if (this.currentMode != Constants.MODE_CONTEXT_MENU) {
+            if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Switch to next enemy
+                let e = this.battleSystem.getNextEnemyInList();
+                this.cursor.set(e.getX(), e.getY());
+                this.cursorMovedEvent();
+            } else {
                 this.cursor.moveRight();
                 this.cursorMovedEvent();
             }
@@ -119,26 +143,15 @@ class MainScene extends Phaser.Scene {
                         this.possibleTiles = this.currentLevel.highlightPaths(this.possiblePaths);
                         break;
                     case Constants.ACTION_WAIT:
-                        if (this.turnSystem.checkPlayerFinished()) {
-                            this.transition.show(lang['end.turn'], this.camera.getOffsetX(), this.camera.getOffsetY());
-                            setTimeout(() => {
-                                this.transition.hide();
-                                this.turnSystem.next(this.selectedUnit);
-                                this.selectedUnit.setMoveStatus(false);
-                                this.selectedUnit = null;
-                                this.unitOriginalPosition = {};
-                                // Reset mode flag
-                                this.clearMode();
-                            }, 1000)
-                        } else {
-                            this.turnSystem.next(this.selectedUnit);
-                            this.selectedUnit = null;
-                            this.unitOriginalPosition = {};
-                            // Reset mode flag
-                            this.clearMode();
-                        }
+                        this.endUnitTurn();
                         break;
                     case Constants.ACTION_ATTACK:
+                        let lstEnemies = this.selectedUnit.checkAttackable();
+                        if (lstEnemies.length > 0) {
+                            this.battleSystem.setEnemiesList(lstEnemies);
+                            // Move cursor around enemies
+                            this.currentMode = Constants.MODE_UNIT_ATTACK;
+                        }
                         break;
                     default:
                 }
@@ -167,6 +180,22 @@ class MainScene extends Phaser.Scene {
                     }
                 }
                 //
+            } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Attack selected unit
+                let enemy = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
+                if (enemy == null) {
+                    // Just to make sure...
+                    return;
+                }
+                let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
+                enemy.currentHealth = enemy.currentHealth - dmgDealt;
+
+                this.battleInfo.show("Dealt " + dmgDealt + " damage!", this.camera.getOffsetX(), this.camera.getOffsetY());
+                setTimeout(() => {
+                    this.battleInfo.hide();
+                    // End unit turn
+                    this.endUnitTurn();
+                }, Config.DialogTransitionTime)
             } else {
                 // Check if user selected a character
                 this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
@@ -196,6 +225,18 @@ class MainScene extends Phaser.Scene {
                 this.clearMode();
                 // Clear highlighted paths
                 this.currentLevel.removeHighlightPaths(this.possibleTiles);
+            } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+                // Exit unit moving action
+                // Reset mode flag
+                this.clearMode();
+                if (this.unitOriginalPosition.x && this.unitOriginalPosition.y) {
+                    if (this.selectedUnit.getX() != this.unitOriginalPosition.x || this.selectedUnit.getY() != this.unitOriginalPosition.y) {
+                        // Move unit back
+                        this.selectedUnit.move(this.unitOriginalPosition.x, this.unitOriginalPosition.y);
+                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.unitOriginalPosition.x, this.unitOriginalPosition.y);
+                        this.unitOriginalPosition = {};
+                    }
+                }
             }
         }
     }
@@ -230,5 +271,27 @@ class MainScene extends Phaser.Scene {
             this.statusMenu = new StatusMenu(this, this.currentLevel);
         }
         this.statusMenu.show(this.cursor.getX(), this.cursor.getY(), unit);
+    }
+
+    endUnitTurn() {
+        this.selectedUnit.setMoveStatus(false);
+        if (this.turnSystem.checkPlayerFinished()) {
+            this.transition.show(lang['end.turn'], this.camera.getOffsetX(), this.camera.getOffsetY());
+            setTimeout(() => {
+                this.transition.hide();
+                this.turnSystem.next(this.selectedUnit);
+                this.selectedUnit.setMoveStatus(false);
+                this.selectedUnit = null;
+                this.unitOriginalPosition = {};
+                // Reset mode flag
+                this.clearMode();
+            }, Config.DialogTransitionTime)
+        } else {
+            this.turnSystem.next(this.selectedUnit);
+            this.selectedUnit = null;
+            this.unitOriginalPosition = {};
+            // Reset mode flag
+            this.clearMode();
+        }
     }
 }

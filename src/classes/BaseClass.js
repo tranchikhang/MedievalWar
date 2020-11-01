@@ -69,7 +69,7 @@ class BaseClass {
             callbackScope: this,
             repeat: path.length - 2
         });
-        this.isMoved = true;
+        this.setMoveStatus(true);
     }
 
     /**

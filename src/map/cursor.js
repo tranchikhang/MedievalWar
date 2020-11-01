@@ -33,6 +33,21 @@ class Cursor {
     }
 
     /**
+     * set cursor on map
+     * @param  {int} x horizontal axis position
+     * @param  {int} y vertical axis position
+     * @return {none}
+     */
+    set(x, y) {
+        this.currentX = x;
+        this.currentY = y;
+        var x = Map.getMapValue(x, true);
+        var y = Map.getMapValue(y, true);
+        this.cursor.setX(x);
+        this.cursor.setY(y);
+    }
+
+    /**
      * Check if the next cursor position is at map border or not
      * @param  {int} x new x
      * @param  {int} y new y
