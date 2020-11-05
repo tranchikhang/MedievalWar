@@ -42,7 +42,7 @@ class BaseClass {
         this.isFinished = false;
     }
 
-    move(x, y, afterMovedFunc) {
+    async move(x, y, afterMovedFunc) {
         // Get shortest path
         let path = PathFinding.findShortestPath(this.scene.currentLevel.getMapObject(), {
             'x': this.currentX,
@@ -51,25 +51,30 @@ class BaseClass {
             'x': x,
             'y': y
         });
+        this.setMoveStatus(true);
         // Move the unit at each step
         // Exclude the first step since it's the current position
         let i = 1;
-        let timer = this.scene.time.addEvent({
-            delay: 100,
-            callback: function() {
-                this.setPosition(path[i].x, path[i].y);
-                this.sprite.setX(Map.getMapValue(path[i].x, true));
-                this.sprite.setY(Map.getMapValue(path[i].y, true));
-                i++;
-                if (i == path.length && afterMovedFunc) {
-                    // Enable control when unit arrived at destination
-                    afterMovedFunc(this.scene);
-                }
-            },
-            callbackScope: this,
-            repeat: path.length - 2
+        return new Promise(resolve => {
+            let timer = this.scene.time.addEvent({
+                delay: 100,
+                callback: function() {
+                    this.setPosition(path[i].x, path[i].y);
+                    this.sprite.setX(Map.getMapValue(path[i].x, true));
+                    this.sprite.setY(Map.getMapValue(path[i].y, true));
+                    i++;
+                    if (i == path.length) {
+                        // if (afterMovedFunc) {
+                        //     // Enable control when unit arrived at destination
+                        //     afterMovedFunc(this.scene);
+                        // }
+                        resolve();
+                    }
+                },
+                callbackScope: this,
+                repeat: path.length - 2
+            });
         });
-        this.setMoveStatus(true);
     }
 
     /**
@@ -201,6 +206,9 @@ class BaseClass {
      * @return {none}
      */
     finishAction() {
+        // Unit completed an action
+        // reset moving status to false
+        this.setMoveStatus(false);
         this.isFinished = true;
         this.setFinishedText();
     }

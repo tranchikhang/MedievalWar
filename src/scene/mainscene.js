@@ -19,7 +19,6 @@ class MainScene extends Phaser.Scene {
         this.possiblePaths = [];
         this.possibleTiles = [];
 
-        this.turnSystem = null;
         this.battleSystem = null;
 
         this.contextMenu = null;
@@ -39,7 +38,6 @@ class MainScene extends Phaser.Scene {
         this.control = new Control(this);
         // camera
         this.camera = new Camera(this.cameras.main);
-        this.turnSystem = new Turn(this.currentLevel);
         this.battleSystem = new BattleSystem(this.currentLevel);
     }
 
@@ -189,13 +187,16 @@ class MainScene extends Phaser.Scene {
                 }
                 let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
                 enemy.currentHealth = enemy.currentHealth - dmgDealt;
-
-                this.battleInfo.show("Dealt " + dmgDealt + " damage!", this.camera.getOffsetX(), this.camera.getOffsetY());
-                setTimeout(() => {
-                    this.battleInfo.hide();
-                    // End unit turn
-                    this.endUnitTurn();
-                }, Config.DialogTransitionTime)
+                this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
+                let timer = this.time.addEvent({
+                    delay: Config.DialogTransitionTime,
+                    callback: function() {
+                        this.battleInfo.hide();
+                        // End unit turn
+                        this.endUnitTurn();
+                    },
+                    callbackScope: this
+                });
             } else {
                 // Check if user selected a character
                 this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
@@ -274,24 +275,52 @@ class MainScene extends Phaser.Scene {
     }
 
     endUnitTurn() {
-        this.selectedUnit.setMoveStatus(false);
-        if (this.turnSystem.checkPlayerFinished()) {
+        this.selectedUnit.finishAction();
+        this.selectedUnit = null;
+        this.unitOriginalPosition = {};
+        if (this.battleSystem.isPlayerFinished()) {
+            this.battleSystem.reset();
+            // Enemy turn
             this.transition.show(lang['end.turn'], this.camera.getOffsetX(), this.camera.getOffsetY());
-            setTimeout(() => {
-                this.transition.hide();
-                this.turnSystem.next(this.selectedUnit);
-                this.selectedUnit.setMoveStatus(false);
-                this.selectedUnit = null;
-                this.unitOriginalPosition = {};
-                // Reset mode flag
-                this.clearMode();
-            }, Config.DialogTransitionTime)
+            let timer = this.time.addEvent({
+                delay: Config.DialogTransitionTime,
+                callback: function() {
+                    this.transition.hide();
+                    this.processAITurn();
+                    // Reset mode flag
+                    this.clearMode();
+                },
+                callbackScope: this
+            });
         } else {
-            this.turnSystem.next(this.selectedUnit);
-            this.selectedUnit = null;
-            this.unitOriginalPosition = {};
+            this.battleSystem.nextUnit();
             // Reset mode flag
             this.clearMode();
         }
+    }
+
+    /**
+     * Process through each enemy unit
+     * @return {none} [description]
+     */
+    async processAITurn() {
+        console.log('Start')
+        let enemyUnits = this.currentLevel.getEnemyUnits();
+        for (var i = enemyUnits.length - 1; i >= 0; i--) {
+            let aiDecision = enemyUnits[i].checkAvailableAction(this.currentLevel);
+            let target = aiDecision.target;
+            let path = aiDecision.path;
+            if (path) {
+                this.currentLevel.setUnitOnMap(enemyUnits[i], path.x, path.y);
+                // Move next to player unit and attack
+                console.log('Enemy ' + i +' move')
+                let a = await enemyUnits[i].move(path.x, path.y);
+                console.log('Enemy ' + i +' end')
+                let dmgDealt = this.battleSystem.calculateDamage(enemyUnits[i], target);
+                // this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
+                target.currentHealth = target.currentHealth - dmgDealt;
+            }
+        }
+        console.log('End')
     }
 }
