@@ -304,7 +304,6 @@ class MainScene extends Phaser.Scene {
      * @return {none} [description]
      */
     async processAITurn() {
-        console.log('Start')
         let enemyUnits = this.currentLevel.getEnemyUnits();
         for (var i = enemyUnits.length - 1; i >= 0; i--) {
             let aiDecision = enemyUnits[i].checkAvailableAction(this.currentLevel);
@@ -313,14 +312,11 @@ class MainScene extends Phaser.Scene {
             if (path) {
                 this.currentLevel.setUnitOnMap(enemyUnits[i], path.x, path.y);
                 // Move next to player unit and attack
-                console.log('Enemy ' + i +' move')
-                let a = await enemyUnits[i].move(path.x, path.y);
-                console.log('Enemy ' + i +' end')
+                await enemyUnits[i].move(path.x, path.y);
                 let dmgDealt = this.battleSystem.calculateDamage(enemyUnits[i], target);
                 // this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
                 target.currentHealth = target.currentHealth - dmgDealt;
             }
         }
-        console.log('End')
     }
 }
