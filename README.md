@@ -30,11 +30,15 @@ The game can be broken down into components list as below.
         * Show damage, hit rate etc calculation
         * If user choose to attack, update unit status after attack (HP etc) - Done
     4. Ally Support - Not implemented
-    5. Battle system - Not implemented
+    5. Battle system - In progress
         1. Hit - evasion calculation
-        2. Damage calculation
+        2. Damage calculation - In progress
         3. Support calculation
-    6. Map objectives - Not implemented
+    6. AI
+        1. Detect player unit in range, then move next to them - Done
+        2. Aggressiveness level
+        3. Decision making (to attack or not etc)
+    7. Map objectives - Not implemented
 2. Character
     1. Classes - Created base class and a few classes
     2. Character data - Not implemented

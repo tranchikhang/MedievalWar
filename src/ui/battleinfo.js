@@ -40,6 +40,10 @@ class BattleInfo {
         this.content.setVisible(true);
     }
 
+    showAttackResult(text, x, y) {
+        this.show(lang['damage.dealt'].replace('%s', dmgDealt), x, y);
+    }
+
     /**
      * Hide the transition menu
      * @return {none}

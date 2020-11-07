@@ -6,5 +6,6 @@ lang = {
     "action.move" : "Move",
     "action.wait" : "Wait",
     "action.attack" : "Attack",
-    "end.turn": "End turn"
+    "end.turn": "End turn",
+    "damage.dealt": "Dealt %s damage!"
 };

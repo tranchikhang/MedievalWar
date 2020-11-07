@@ -2,9 +2,12 @@ class Ai {
 
     /**
      * Check all available action at each tile
+     * If there is a player unit nearby,
+     * move to the tile next to them, then attack
+     * TODO To improve AI logic
      * @param  {currentLevel} current level
      * @param  {currentUnit} current unit position
-     * @return {object} best tile to move to
+     * @return {array} targeted unit and best tile to move to
      */
     static checkWithinRange(currentLevel, currentUnit) {
         let map = currentLevel.getMapObject();
@@ -13,7 +16,10 @@ class Ai {
             y: currentUnit.getY(),
             step: 0
         }];
-        let result = null;
+        let result = {
+            'target': null,
+            'path': null
+        };
         let visited = [];
         for (let y = 0; y < map.length; y++) {
             let row = [];
@@ -48,6 +54,8 @@ class Ai {
                         let unit = currentLevel.getUnit(newPos.x, newPos.y);
                         if (unit !== null) {
                             if (unit.isPlayer()) {
+                                // Found player unit
+                                // Calculating shortest path
                                 let p = PathFinding.findShortestPath(currentLevel.getMapObject(), {
                                     x: currentUnit.getX(),
                                     y: currentUnit.getY(),
@@ -62,8 +70,9 @@ class Ai {
                                 }
                                 p.splice(0, 1);
                                 p.splice(p.length - 1, 1);
-                                if (!result || (result && p.length < result.length)) {
-                                    result = p[p.length - 1];
+                                if (!result.path || (result.path && p.length < result.path.length)) {
+                                    result.target = unit;
+                                    result.path = p[p.length - 1];
                                 }
                             }
                         }

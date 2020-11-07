@@ -8,6 +8,36 @@ class BattleSystem {
         this.lstEnemies = [];
 
         this.selectEnemyIdx = 0;
+        this.playerUnitsMoved = 0;
+    }
+
+    /**
+     * A unit has finished an action, move to next one
+     * @param  {finished unit}   unit
+     * @return {none}
+     */
+    nextUnit(unit) {
+        this.playerUnitsMoved += 1;
+    }
+
+    /**
+     * Reset for new turn
+     * @return {none}
+     */
+    reset() {
+        // All player units have finished their action
+        this.playerUnitsMoved = 0;
+        for (var i = this.playerUnits.length - 1; i >= 0; i--) {
+            this.playerUnits[i].startAction();
+        }
+    }
+
+    /**
+     * Check if player finished action on all units
+     * @return {boolean}
+     */
+    isPlayerFinished() {
+        return this.playerUnitsMoved == this.playerUnits.length - 1;
     }
 
     /**
@@ -37,7 +67,7 @@ class BattleSystem {
     getPrevEnemyInList() {
         this.selectEnemyIdx -= 1;
         if (this.selectEnemyIdx == -1) {
-            this.selectEnemyIdx = this.lstEnemies.length-1;
+            this.selectEnemyIdx = this.lstEnemies.length - 1;
         }
         return this.lstEnemies[this.selectEnemyIdx];
     }

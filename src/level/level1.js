@@ -38,15 +38,17 @@ class Level1 extends Level {
 
     createEnemyUnits() {
         let positionList = [
-            [11, 12],
-            [13, 12],
+            [5, 6],
+            [6, 7],
             [22, 4],
             [23, 5]
         ];
         for (let i = 0; i < positionList.length; i++) {
             // Draw character
             let pal = new Paladin(this.scene);
-            pal.name = 'Enemy ' + (i+1).toString();
+            pal.name = 'Enemy ' + (i + 1).toString();
+            pal.health = 10;
+            pal.currentHealth = 10;
             pal.drawStanding(Map.getMapValue(positionList[i][0], true), Map.getMapValue(positionList[i][1], true), pal.enemyTexture);
             pal.index = Constants.TILE_ENEMY_UNIT_START + i;
             this.enemyUnits.push(pal);
