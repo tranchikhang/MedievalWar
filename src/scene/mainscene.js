@@ -72,10 +72,10 @@ class MainScene extends Phaser.Scene {
                 // Switch to next enemy
                 let e = this.battleSystem.getNextEnemyInList();
                 this.cursor.set(e.getX(), e.getY());
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             } else {
                 this.cursor.moveUp();
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             }
         }
 
@@ -87,10 +87,10 @@ class MainScene extends Phaser.Scene {
                 // Switch to previous enemy
                 let e = this.battleSystem.getPrevEnemyInList();
                 this.cursor.set(e.getX(), e.getY());
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             } else {
                 this.cursor.moveDown();
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             }
         }
 
@@ -100,10 +100,10 @@ class MainScene extends Phaser.Scene {
                 // Switch to previous enemy
                 let e = this.battleSystem.getPrevEnemyInList();
                 this.cursor.set(e.getX(), e.getY());
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             } else {
                 this.cursor.moveLeft();
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             }
         }
 
@@ -113,98 +113,16 @@ class MainScene extends Phaser.Scene {
                 // Switch to next enemy
                 let e = this.battleSystem.getNextEnemyInList();
                 this.cursor.set(e.getX(), e.getY());
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             } else {
                 this.cursor.moveRight();
-                this.cursorMovedEvent();
+                this.onCursorMoved();
             }
         }
 
         let isSelectDown = Phaser.Input.Keyboard.JustDown(this.control.keySelect);
         if (isSelectDown) {
-            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
-                // Check for action
-                let action = this.contextMenu.select();
-                this.contextMenu.hide();
-                switch (action) {
-                    case Constants.ACTION_MOVE:
-                        // Switch to unit moving mode
-                        this.currentMode = Constants.MODE_UNIT_MOVE;
-                        // Get all possible moving paths
-                        this.possiblePaths = PathFinding.findPathWithinRange(
-                            this.currentLevel.getMapObject(), {
-                                'x': this.cursor.getX(),
-                                'y': this.cursor.getY()
-                            },
-                            this.selectedUnit.moveRange);
-                        // Highlight all paths
-                        this.possibleTiles = this.currentLevel.highlightPaths(this.possiblePaths);
-                        break;
-                    case Constants.ACTION_WAIT:
-                        this.endUnitTurn();
-                        break;
-                    case Constants.ACTION_ATTACK:
-                        let lstEnemies = this.selectedUnit.checkAttackable();
-                        if (lstEnemies.length > 0) {
-                            this.battleSystem.setEnemiesList(lstEnemies);
-                            // Move cursor around enemies
-                            this.currentMode = Constants.MODE_UNIT_ATTACK;
-                        }
-                        break;
-                    default:
-                }
-            } else if (this.currentMode == Constants.MODE_UNIT_MOVE) {
-                // Player is moving unit
-                // Check if there is already an unit there
-                let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
-                if (unit !== null) {
-                    return;
-                }
-                // Check if unit can move to this tile or not
-                for (let i = 0; i < this.possiblePaths.length; i++) {
-                    if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
-                        // Clear highlighted paths
-                        this.currentLevel.removeHighlightPaths(this.possibleTiles);
-                        this.unitOriginalPosition = {
-                            x: this.selectedUnit.getX(),
-                            y: this.selectedUnit.getY()
-                        }
-                        // Move unit to selected tile
-                        this.control.disable();
-                        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY());
-                        this.selectedUnit.move(this.cursor.getX(), this.cursor.getY(), this.unitMovedEvent);
-                        this.clearMode();
-                        break;
-                    }
-                }
-                //
-            } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
-                // Attack selected unit
-                let enemy = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
-                if (enemy == null) {
-                    // Just to make sure...
-                    return;
-                }
-                let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
-                enemy.currentHealth = enemy.currentHealth - dmgDealt;
-                this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
-                let timer = this.time.addEvent({
-                    delay: Config.DialogTransitionTime,
-                    callback: function() {
-                        this.battleInfo.hide();
-                        // End unit turn
-                        this.endUnitTurn();
-                    },
-                    callbackScope: this
-                });
-            } else {
-                // Check if user selected a character
-                this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
-                if (this.selectedUnit !== null && !this.selectedUnit.isEnemy() && this.selectedUnit.isAvailable()) {
-                    this.showContextMenu(this.selectedUnit);
-                }
-            }
-            this.control.keySelect.isDown = false;
+            this.onSelectDown();
         }
 
         let isCancelPressed = Phaser.Input.Keyboard.JustDown(this.control.keyCancel);
@@ -242,11 +160,99 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    unitMovedEvent(scene) {
+    onSelectDown() {
+        if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+            // Check for action
+            let action = this.contextMenu.select();
+            this.contextMenu.hide();
+            switch (action) {
+                case Constants.ACTION_MOVE:
+                    // Switch to unit moving mode
+                    this.currentMode = Constants.MODE_UNIT_MOVE;
+                    // Get all possible moving paths
+                    this.possiblePaths = PathFinding.findPathWithinRange(
+                        this.currentLevel.getMapObject(), {
+                            'x': this.cursor.getX(),
+                            'y': this.cursor.getY()
+                        },
+                        this.selectedUnit.moveRange);
+                    // Highlight all paths
+                    this.possibleTiles = this.currentLevel.highlightPaths(this.possiblePaths);
+                    break;
+                case Constants.ACTION_WAIT:
+                    this.endUnitTurn();
+                    break;
+                case Constants.ACTION_ATTACK:
+                    let lstEnemies = this.selectedUnit.checkAttackable();
+                    if (lstEnemies.length > 0) {
+                        this.battleSystem.setEnemiesList(lstEnemies);
+                        // Move cursor around enemies
+                        this.currentMode = Constants.MODE_UNIT_ATTACK;
+                    }
+                    break;
+                default:
+            }
+        } else if (this.currentMode == Constants.MODE_UNIT_MOVE) {
+            // Player is moving unit
+            // Check if there is already an unit there
+            let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
+            if (unit !== null) {
+                return;
+            }
+            // Check if unit can move to this tile or not
+            for (let i = 0; i < this.possiblePaths.length; i++) {
+                if (this.possiblePaths[i].x == this.cursor.getX() && this.possiblePaths[i].y == this.cursor.getY()) {
+                    this.moveUnit();
+                    this.clearMode();
+                    break;
+                }
+            }
+            //
+        } else if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
+            // Attack selected unit
+            let enemy = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
+            if (enemy == null) {
+                // Just to make sure...
+                return;
+            }
+            let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
+            enemy.currentHealth = enemy.currentHealth - dmgDealt;
+            this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
+            let timer = this.time.addEvent({
+                delay: Config.DialogTransitionTime,
+                callback: function() {
+                    this.battleInfo.hide();
+                    // End unit turn
+                    this.endUnitTurn();
+                },
+                callbackScope: this
+            });
+        } else {
+            // Check if user selected a character
+            this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
+            if (this.selectedUnit !== null && !this.selectedUnit.isEnemy() && this.selectedUnit.isAvailable()) {
+                this.showContextMenu(this.selectedUnit);
+            }
+        }
+        this.control.keySelect.isDown = false;
+    }
+
+    async moveUnit() {
+        // Clear highlighted paths
+        this.currentLevel.removeHighlightPaths(this.possibleTiles);
+        this.unitOriginalPosition = {
+            x: this.selectedUnit.getX(),
+            y: this.selectedUnit.getY()
+        }
+        // Move unit to selected tile
+        this.control.disable();
+        this.currentLevel.setUnitOnMap(this.selectedUnit, this.cursor.getX(), this.cursor.getY());
+        // this.selectedUnit.move(this.cursor.getX(), this.cursor.getY());
+        await this.selectedUnit.move(this.cursor.getX(), this.cursor.getY());
         // Enable control
-        scene.control.enable();
-        if (scene.unitOriginalPosition.x && scene.unitOriginalPosition.y) {
-            scene.showContextMenu(scene.selectedUnit);
+        this.control.enable();
+        if (this.unitOriginalPosition.x && this.unitOriginalPosition.y) {
+            this.showContextMenu(this.selectedUnit);
         }
     }
 
@@ -260,7 +266,7 @@ class MainScene extends Phaser.Scene {
         this.contextMenu.show(unit);
     }
 
-    cursorMovedEvent() {
+    onCursorMoved() {
         let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
         if (unit === null) {
             if (this.statusMenu) {
@@ -274,6 +280,10 @@ class MainScene extends Phaser.Scene {
         this.statusMenu.show(this.cursor.getX(), this.cursor.getY(), unit);
     }
 
+    /**
+     * End unit's turn
+     * @return {none}
+     */
     endUnitTurn() {
         this.selectedUnit.finishAction();
         this.selectedUnit = null;

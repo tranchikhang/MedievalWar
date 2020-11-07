@@ -18,11 +18,6 @@ class BattleSystem {
      */
     nextUnit(unit) {
         this.playerUnitsMoved += 1;
-        // if (this.isPlayerFinished()) {
-        //     // this.processAITurn();
-        //     this.reset();
-        // } else {
-        // }
     }
 
     /**

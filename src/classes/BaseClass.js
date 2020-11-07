@@ -42,7 +42,13 @@ class BaseClass {
         this.isFinished = false;
     }
 
-    async move(x, y, afterMovedFunc) {
+    /**
+     * Move unit to target position
+     * @param  {int} x
+     * @param  {int} y
+     * @return {none}
+     */
+    move(x, y) {
         // Get shortest path
         let path = PathFinding.findShortestPath(this.scene.currentLevel.getMapObject(), {
             'x': this.currentX,
@@ -64,10 +70,6 @@ class BaseClass {
                     this.sprite.setY(Map.getMapValue(path[i].y, true));
                     i++;
                     if (i == path.length) {
-                        // if (afterMovedFunc) {
-                        //     // Enable control when unit arrived at destination
-                        //     afterMovedFunc(this.scene);
-                        // }
                         resolve();
                     }
                 },
@@ -79,8 +81,8 @@ class BaseClass {
 
     /**
      * Set unit position on map
-     * @param {int} x [description]
-     * @param {int} y [description]
+     * @param {int} x
+     * @param {int} y
      */
     setPosition(x, y) {
         this.currentX = x;
@@ -193,7 +195,7 @@ class BaseClass {
 
     /**
      * Show "E" letter after unit has finished action
-     * @return {none} [description]
+     * @return {none}
      */
     setFinishedText() {
         this.waitText.setX(Map.getMapValue(this.getX()));
