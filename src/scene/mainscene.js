@@ -96,6 +96,9 @@ class MainScene extends Phaser.Scene {
 
         var isLeftDown = this.input.keyboard.checkDown(this.control.keyLeft, 100);
         if (isLeftDown) {
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                return;
+            }
             if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
                 // Switch to previous enemy
                 let e = this.battleSystem.getPrevEnemyInList();
@@ -109,6 +112,9 @@ class MainScene extends Phaser.Scene {
 
         var isRightDown = this.input.keyboard.checkDown(this.control.keyRight, 100);
         if (isRightDown) {
+            if (this.currentMode == Constants.MODE_CONTEXT_MENU) {
+                return;
+            }
             if (this.currentMode == Constants.MODE_UNIT_ATTACK) {
                 // Switch to next enemy
                 let e = this.battleSystem.getNextEnemyInList();
@@ -218,15 +224,8 @@ class MainScene extends Phaser.Scene {
             let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
             enemy.currentHealth = enemy.currentHealth - dmgDealt;
             this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
-            let timer = this.time.addEvent({
-                delay: Config.DialogTransitionTime,
-                callback: function() {
-                    this.battleInfo.hide();
-                    // End unit turn
-                    this.endUnitTurn();
-                },
-                callbackScope: this
-            });
+            // End unit turn
+            this.endUnitTurn();
         } else {
             // Check if user selected a character
             this.selectedUnit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
@@ -324,7 +323,7 @@ class MainScene extends Phaser.Scene {
                 // Move next to player unit and attack
                 await enemyUnits[i].move(path.x, path.y);
                 let dmgDealt = this.battleSystem.calculateDamage(enemyUnits[i], target);
-                // this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
+                await this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
                 target.currentHealth = target.currentHealth - dmgDealt;
             }
         }

@@ -32,16 +32,26 @@ class BattleInfo {
             this.setText(text);
         }
         if (x != null) {
-            this.content.setX(Config.WindowWidth / 4 + Map.getMapValue(x));
+            this.content.setX(Config.WindowWidth / 5 + Map.getMapValue(x));
         }
         if (y != null) {
             this.content.setY(Config.WindowHeight / 3 + Map.getMapValue(y));
         }
         this.content.setVisible(true);
+        return new Promise(resolve => {
+            let timer = this.scene.time.addEvent({
+                delay: Config.DialogTransitionTime,
+                callback: function() {
+                    this.hide();
+                    resolve();
+                },
+                callbackScope: this
+            });
+        });
     }
 
-    showAttackResult(text, x, y) {
-        this.show(lang['damage.dealt'].replace('%s', dmgDealt), x, y);
+    async showAttackResult(dmgDealt, x, y) {
+        await this.show(lang['damage.dealt'].replace('%s', dmgDealt), x, y);
     }
 
     /**
