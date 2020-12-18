@@ -182,4 +182,14 @@ class Level {
     getEnemyUnits() {
         return this.enemyUnits;
     }
+
+    /**
+     * Remove enemy unit from the map (retreat, death etc)
+     * @param  {object} unitIdx index of unit to be removed
+     * @return {none}
+     */
+    removeEnemyUnits(unitIdx) {
+        let idx = this.enemyUnits.findIndex(u => u.index === unitIdx);
+        this.enemyUnits.splice(idx, 1);
+    }
 }

@@ -153,7 +153,7 @@ class BaseClass {
      */
     drawStanding(x, y, texture) {
         if (this.sprite) {
-            this.sprite.destroy();
+            this.destroySprite();
         }
         this.sprite = this.scene.add.sprite(x, y, this.className, texture).setScale(1.5);
         this.createFinishedText();
@@ -249,8 +249,17 @@ class BaseClass {
      * Remove sprite
      * @return {none}
      */
-    destroy() {
+    destroySprite() {
         this.sprite.destroy();
+    }
+
+    /**
+     * Destroy unit
+     * @return {none}
+     */
+    destroy() {
+        this.destroySprite();
+        this.scene.currentLevel.getMapObject()
     }
 
     /**
@@ -278,6 +287,19 @@ class BaseClass {
      */
     checkMoveable() {
         return true;
+    }
+
+    /**
+     * Update unit health after damaged
+     * @param  {int} damage
+     * @return {none}
+     */
+    onDamage(damage) {
+        this.currentHealth -= damage;
+        if (this.currentHealth <= 0) {
+            this.destroy();
+            this.scene.currentLevel.removeEnemyUnits(this.idx);
+        }
     }
 
 }

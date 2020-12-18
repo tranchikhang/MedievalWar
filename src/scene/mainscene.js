@@ -222,7 +222,7 @@ class MainScene extends Phaser.Scene {
                 return;
             }
             let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
-            enemy.currentHealth = enemy.currentHealth - dmgDealt;
+            enemy.onDamage(dmgDealt);
             this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
             // End unit turn
             this.endUnitTurn();
@@ -323,8 +323,8 @@ class MainScene extends Phaser.Scene {
                 // Move next to player unit and attack
                 await enemyUnits[i].move(path.x, path.y);
                 let dmgDealt = this.battleSystem.calculateDamage(enemyUnits[i], target);
-                await this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
-                target.currentHealth = target.currentHealth - dmgDealt;
+                target.onDamage(dmgDealt);
+                this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
             }
         }
     }
