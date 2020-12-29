@@ -106,7 +106,7 @@ class Level {
      * @param {int} x
      * @param {int} y
      */
-    setUnitPosition(index, x, y) {
+    drawUnitOnMap(index, x, y) {
         this.setMapObject(x, y, index);
         if (index < Constants.TILE_ENEMY_UNIT_START) {
             this.playerUnits[index].setPosition(x, y);
