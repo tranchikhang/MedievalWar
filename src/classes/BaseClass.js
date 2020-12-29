@@ -225,27 +225,6 @@ class BaseClass {
     }
 
     /**
-     * get surrounding tiles
-     * @return {array} 4 tiles position
-     */
-    getSurroundings() {
-        let surroundingTiles = [{
-            x: 0,
-            y: -1
-        }, {
-            x: 1,
-            y: 0
-        }, {
-            x: 0,
-            y: 1
-        }, {
-            x: -1,
-            y: 0
-        }];
-        return surroundingTiles;
-    }
-
-    /**
      * Remove sprite
      * @return {none}
      */
@@ -267,7 +246,7 @@ class BaseClass {
      * @return {array} array of enemies
      */
     checkAttackable() {
-        let s = this.getSurroundings();
+        let s = PathFinding.surroundingTile;
         let lstEnemies = [];
         for (var j = 0; j < s.length; j++) {
             let currentX = this.getX() + s[j].x;
