@@ -27,7 +27,7 @@ class BattleInfo {
      * Show battle information
      * @param {string} text content to show
      */
-    async show(text = '') {
+    show(text = '') {
         let x = this.scene.camera.getOffsetX();
         let y = this.scene.camera.getOffsetY();
         if (text) {
