@@ -2,8 +2,6 @@ class BattleSystem {
 
     constructor(currentLevel) {
         this.currentLevel = currentLevel;
-        this.enemyUnits = this.currentLevel.getEnemyUnits();
-        this.playerUnits = this.currentLevel.getPlayerUnits();
 
         this.lstEnemies = [];
 
@@ -27,8 +25,8 @@ class BattleSystem {
     reset() {
         // All player units have finished their action
         this.playerUnitsMoved = 0;
-        for (var i = this.playerUnits.length - 1; i >= 0; i--) {
-            this.playerUnits[i].startAction();
+        for (var i = this.currentLevel.getPlayerUnits().length - 1; i >= 0; i--) {
+            this.currentLevel.getPlayerUnits()[i].startAction();
         }
     }
 
@@ -37,7 +35,7 @@ class BattleSystem {
      * @return {boolean}
      */
     isPlayerFinished() {
-        return this.playerUnitsMoved == this.playerUnits.length - 1;
+        return this.playerUnitsMoved == this.currentLevel.getPlayerUnits().length - 1;
     }
 
     /**
@@ -90,4 +88,33 @@ class BattleSystem {
      * @return {[type]}
      */
     calculateHitRate(attacker, defender) {}
+
+    /**
+     * Process through each enemy unit
+     * @return {none} [description]
+     */
+    async processAITurn(battleInfo) {
+        for (var i = this.currentLevel.getEnemyUnits().length - 1; i >= 0; i--) {
+            let aiDecision = this.currentLevel.getEnemyUnits()[i].checkAvailableAction(this.currentLevel);
+            let target = aiDecision.target;
+            let path = aiDecision.path;
+            if (path) {
+                this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
+                // Move next to player unit and attack
+                await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+                executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
+            }
+        }
+    }
+
+    executeBattle(attacker, defender, battleInfo) {
+        let dmgDealt = this.calculateDamage(attacker, defender);
+        defender.onDamage(dmgDealt);
+        battleInfo.showAttackResult(dmgDealt);
+
+        if (defender.isDead()) {
+            defender.destroy();
+            this.currentLevel.removeUnit(defender);
+        }
+    }
 }

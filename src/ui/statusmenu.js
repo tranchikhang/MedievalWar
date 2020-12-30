@@ -5,6 +5,8 @@ class StatusMenu {
         this.scene = scene;
         this.level = level;
 
+        this.isVisible = true;
+
         this.menuWidth = Map.getMapValue(3);
         this.menuHeight = Map.getMapValue(1);
         this.menuOffsetSide = 0;
@@ -39,6 +41,7 @@ class StatusMenu {
      * @return {none}   [description]
      */
     show(x, y, unit) {
+        this.isVisible = true;
         let isRightMenu = true;
 
         if (Map.getMapValue(x) + this.menuWidth >= Config.WindowWidth) {
@@ -65,6 +68,7 @@ class StatusMenu {
      * @return {none}
      */
     hide() {
+        this.isVisible = false;
         this.unitName.setVisible(false);
         this.unitHp.setVisible(false);
     }

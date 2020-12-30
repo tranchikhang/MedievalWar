@@ -225,20 +225,11 @@ class BaseClass {
     }
 
     /**
-     * Remove sprite
-     * @return {none}
-     */
-    destroySprite() {
-        this.sprite.destroy();
-    }
-
-    /**
      * Destroy unit
      * @return {none}
      */
     destroy() {
-        this.destroySprite();
-        this.scene.currentLevel.getMapObject()
+        this.sprite.destroy();
     }
 
     /**
@@ -275,10 +266,14 @@ class BaseClass {
      */
     onDamage(damage) {
         this.currentHealth -= damage;
-        if (this.currentHealth <= 0) {
-            this.destroy();
-            this.scene.currentLevel.removeEnemyUnits(this.idx);
-        }
+    }
+
+    /**
+     * Check if unit is dead
+     * @return {Boolean} is dead or not
+     */
+    isDead() {
+        return this.currentHealth <= 0;
     }
 
 }

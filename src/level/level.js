@@ -182,14 +182,19 @@ class Level {
     getEnemyUnits() {
         return this.enemyUnits;
     }
-
     /**
-     * Remove enemy unit from the map (retreat, death etc)
-     * @param  {object} unitIdx index of unit to be removed
-     * @return {none}
+     * Remove player unit from the map (retreat, death etc)
+     * @param  {object} unit unit to be removed
      */
-    removeEnemyUnits(unitIdx) {
-        let idx = this.enemyUnits.findIndex(u => u.index === unitIdx);
-        this.enemyUnits.splice(idx, 1);
+    removeUnit(unit) {
+        // Set current unit position to terrain value
+        this.setMapObject(unit.getX(), unit.getY(), Constants.TILE_TERRAIN_ABLE_TO_PASS);
+        if (unit.isEnemy()) {
+            let idx = this.enemyUnits.findIndex(u => u.index === unit.index);
+            this.enemyUnits.splice(idx, 1);
+        } else {
+            let idx = this.playerUnits.findIndex(u => u.index === unit.index);
+            this.playerUnits.splice(idx, 1);
+        }
     }
 }

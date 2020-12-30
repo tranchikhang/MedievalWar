@@ -221,9 +221,7 @@ class MainScene extends Phaser.Scene {
                 // Just to make sure...
                 return;
             }
-            let dmgDealt = this.battleSystem.calculateDamage(this.selectedUnit, enemy);
-            enemy.onDamage(dmgDealt);
-            this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
+            this.battleSystem.executeBattle(this.selectedUnit, enemy, this.battleInfo);
             // End unit turn
             this.endUnitTurn();
         } else {
@@ -268,7 +266,7 @@ class MainScene extends Phaser.Scene {
     onCursorMoved() {
         let unit = this.currentLevel.getUnit(this.cursor.getX(), this.cursor.getY());
         if (unit === null) {
-            if (this.statusMenu) {
+            if (this.statusMenu && this.statusMenu.isVisible) {
                 this.statusMenu.hide();
             }
             return;
@@ -295,7 +293,7 @@ class MainScene extends Phaser.Scene {
                 delay: Config.DialogTransitionTime,
                 callback: function() {
                     this.transition.hide();
-                    this.processAITurn();
+                    this.battleSystem.processAITurn(this.battleInfo);
                     // Reset mode flag
                     this.clearMode();
                 },
@@ -305,27 +303,6 @@ class MainScene extends Phaser.Scene {
             this.battleSystem.nextUnit();
             // Reset mode flag
             this.clearMode();
-        }
-    }
-
-    /**
-     * Process through each enemy unit
-     * @return {none} [description]
-     */
-    async processAITurn() {
-        let enemyUnits = this.currentLevel.getEnemyUnits();
-        for (var i = enemyUnits.length - 1; i >= 0; i--) {
-            let aiDecision = enemyUnits[i].checkAvailableAction(this.currentLevel);
-            let target = aiDecision.target;
-            let path = aiDecision.path;
-            if (path) {
-                this.currentLevel.setUnitOnMap(enemyUnits[i], path.x, path.y);
-                // Move next to player unit and attack
-                await enemyUnits[i].move(path.x, path.y);
-                let dmgDealt = this.battleSystem.calculateDamage(enemyUnits[i], target);
-                target.onDamage(dmgDealt);
-                this.battleInfo.showAttackResult(dmgDealt, this.camera.getOffsetX(), this.camera.getOffsetY());
-            }
         }
     }
 }

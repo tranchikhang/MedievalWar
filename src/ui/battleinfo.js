@@ -24,10 +24,12 @@ class BattleInfo {
     }
 
     /**
-     * Show the transition menu
-     * @return {none}
+     * Show battle information
+     * @param {string} text content to show
      */
-    show(text = '', x = null, y = null) {
+    show(text = '') {
+        let x = this.scene.camera.getOffsetX();
+        let y = this.scene.camera.getOffsetY();
         if (text) {
             this.setText(text);
         }
