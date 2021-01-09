@@ -105,6 +105,7 @@ class BattleSystem {
                 // Move next to player unit and attack
                 this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
                 await this.executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
+                await Utils.sleep();
             }
         }
     }
@@ -118,15 +119,12 @@ class BattleSystem {
                 this.currentLevel.removeUnit(defender);
             }
             console.log('show result ' + new Date().getSeconds())
-            // battleInfo.showAttackResult(dmgDealt);
-            // await battleInfo.show(lang['damage.dealt'].replace('%s', dmgDealt));
-            // await Utils.sleep();
-            console.log('end show result ' + new Date().getSeconds())
+            battleInfo.showAttackResult(dmgDealt);
             let timer = this.scene.time.addEvent({
                 delay: Config.DialogTransitionTime,
                 callback: function() {
                     resolve();
-                    console.log('resolve ' + new Date().getSeconds())
+                    console.log('end show result ' + new Date().getSeconds())
                 },
                 callbackScope: this
             });

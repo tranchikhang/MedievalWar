@@ -27,7 +27,7 @@ class BattleInfo {
      * Show battle information
      * @param {string} text content to show
      */
-    show(text = '') {
+    async show(text = '') {
         let x = this.scene.camera.getOffsetX();
         let y = this.scene.camera.getOffsetY();
         if (text) {
@@ -45,18 +45,17 @@ class BattleInfo {
                 delay: Config.DialogTransitionTime,
                 callback: function() {
                     this.hide();
-                    resolve();
                     console.log('resolve ' + new Date().getSeconds())
+                    resolve();
                 },
                 callbackScope: this
             });
         });
+
     }
 
     async showAttackResult(dmgDealt) {
-        await this.show(lang['damage.dealt'].replace('%s', dmgDealt));
-        console.log(new Date().getSeconds())
-        await Utils.sleep();
+        await this.show(lang['damage.dealt'].replace('%s', dmgDealt)););
         console.log('After sleep: ' + new Date().getSeconds())
     }
 
