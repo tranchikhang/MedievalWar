@@ -1,6 +1,7 @@
 class BattleSystem {
 
-    constructor(currentLevel) {
+    constructor(currentLevel, scene) {
+        this.scene = scene;
         this.currentLevel = currentLevel;
 
         this.lstEnemies = [];
@@ -95,26 +96,40 @@ class BattleSystem {
      */
     async processAITurn(battleInfo) {
         for (var i = this.currentLevel.getEnemyUnits().length - 1; i >= 0; i--) {
+            console.log('process AI unit: ' + i)
             let aiDecision = this.currentLevel.getEnemyUnits()[i].checkAvailableAction(this.currentLevel);
             let target = aiDecision.target;
             let path = aiDecision.path;
             if (path) {
                 this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
                 // Move next to player unit and attack
-                await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
-                executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
+                this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+                await this.executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
             }
         }
     }
 
     executeBattle(attacker, defender, battleInfo) {
-        let dmgDealt = this.calculateDamage(attacker, defender);
-        defender.onDamage(dmgDealt);
-        battleInfo.showAttackResult(dmgDealt);
-
-        if (defender.isDead()) {
-            defender.destroy();
-            this.currentLevel.removeUnit(defender);
-        }
+        return new Promise(resolve => {
+            let dmgDealt = this.calculateDamage(attacker, defender);
+            defender.onDamage(dmgDealt);
+            if (defender.isDead()) {
+                defender.destroy();
+                this.currentLevel.removeUnit(defender);
+            }
+            console.log('show result ' + new Date().getSeconds())
+            // battleInfo.showAttackResult(dmgDealt);
+            // await battleInfo.show(lang['damage.dealt'].replace('%s', dmgDealt));
+            // await Utils.sleep();
+            console.log('end show result ' + new Date().getSeconds())
+            let timer = this.scene.time.addEvent({
+                delay: Config.DialogTransitionTime,
+                callback: function() {
+                    resolve();
+                    console.log('resolve ' + new Date().getSeconds())
+                },
+                callbackScope: this
+            });
+        });
     }
 }

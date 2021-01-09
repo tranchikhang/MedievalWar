@@ -46,14 +46,18 @@ class BattleInfo {
                 callback: function() {
                     this.hide();
                     resolve();
+                    console.log('resolve ' + new Date().getSeconds())
                 },
                 callbackScope: this
             });
         });
     }
 
-    async showAttackResult(dmgDealt, x, y) {
-        await this.show(lang['damage.dealt'].replace('%s', dmgDealt), x, y);
+    async showAttackResult(dmgDealt) {
+        await this.show(lang['damage.dealt'].replace('%s', dmgDealt));
+        console.log(new Date().getSeconds())
+        await Utils.sleep();
+        console.log('After sleep: ' + new Date().getSeconds())
     }
 
     /**
