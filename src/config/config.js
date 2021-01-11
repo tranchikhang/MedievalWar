@@ -12,6 +12,6 @@ class Config {
     }
 
     static get DialogTransitionTime() {
-        return 2000;
+        return 1000;
     }
 }

@@ -45,8 +45,8 @@ class BattleInfo {
 
     }
 
-    async showAttackResult(dmgDealt) {
-        await this.show(lang['damage.dealt'].replace('%s', dmgDealt));
+    async showAttackResult(dmgDealt, x, y) {
+        await this.show(lang['damage.dealt'].replace('%s', dmgDealt), x, y);
     }
 
     /**

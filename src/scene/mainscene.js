@@ -38,7 +38,7 @@ class MainScene extends Phaser.Scene {
         this.control = new Control(this);
         // camera
         this.camera = new Camera(this.cameras.main);
-        this.battleSystem = new BattleSystem(this.currentLevel, this);
+        this.battleSystem = new BattleSystem(this.currentLevel);
     }
 
     create() {

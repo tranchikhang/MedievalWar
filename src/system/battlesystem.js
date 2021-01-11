@@ -1,7 +1,6 @@
 class BattleSystem {
 
-    constructor(currentLevel, scene) {
-        this.scene = scene;
+    constructor(currentLevel) {
         this.currentLevel = currentLevel;
 
         this.lstEnemies = [];
