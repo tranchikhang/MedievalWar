@@ -1,6 +1,6 @@
 class Utils {
 
-    static sleep() {
-        return new Promise(resolve => setTimeout(resolve, Config.DialogTransitionTime));
+    static sleep(time = Config.DialogTransitionTime) {
+        return new Promise(resolve => setTimeout(resolve, time));
     }
 }

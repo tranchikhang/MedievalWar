@@ -40,23 +40,13 @@ class BattleInfo {
             this.content.setY(Config.WindowHeight / 3 + Map.getMapValue(y));
         }
         this.content.setVisible(true);
-        return new Promise(resolve => {
-            let timer = this.scene.time.addEvent({
-                delay: Config.DialogTransitionTime,
-                callback: function() {
-                    this.hide();
-                    console.log('resolve ' + new Date().getSeconds())
-                    resolve();
-                },
-                callbackScope: this
-            });
-        });
+        await Utils.sleep();
+        this.hide();
 
     }
 
     async showAttackResult(dmgDealt) {
-        await this.show(lang['damage.dealt'].replace('%s', dmgDealt)););
-        console.log('After sleep: ' + new Date().getSeconds())
+        await this.show(lang['damage.dealt'].replace('%s', dmgDealt));
     }
 
     /**

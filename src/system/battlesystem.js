@@ -96,16 +96,14 @@ class BattleSystem {
      */
     async processAITurn(battleInfo) {
         for (var i = this.currentLevel.getEnemyUnits().length - 1; i >= 0; i--) {
-            console.log('process AI unit: ' + i)
             let aiDecision = this.currentLevel.getEnemyUnits()[i].checkAvailableAction(this.currentLevel);
             let target = aiDecision.target;
             let path = aiDecision.path;
             if (path) {
                 this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
                 // Move next to player unit and attack
-                this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+                await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
                 await this.executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
-                await Utils.sleep();
             }
         }
     }
@@ -118,13 +116,11 @@ class BattleSystem {
                 defender.destroy();
                 this.currentLevel.removeUnit(defender);
             }
-            console.log('show result ' + new Date().getSeconds())
             battleInfo.showAttackResult(dmgDealt);
             let timer = this.scene.time.addEvent({
                 delay: Config.DialogTransitionTime,
                 callback: function() {
                     resolve();
-                    console.log('end show result ' + new Date().getSeconds())
                 },
                 callbackScope: this
             });
