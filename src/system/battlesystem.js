@@ -102,29 +102,20 @@ class BattleSystem {
             if (path) {
                 this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
                 // Move next to player unit and attack
-                this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+                await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
                 await this.executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
                 await Utils.sleep();
             }
         }
     }
 
-    executeBattle(attacker, defender, battleInfo) {
-        return new Promise(resolve => {
-            let dmgDealt = this.calculateDamage(attacker, defender);
-            defender.onDamage(dmgDealt);
-            if (defender.isDead()) {
-                defender.destroy();
-                this.currentLevel.removeUnit(defender);
-            }
-            battleInfo.showAttackResult(dmgDealt);
-            let timer = this.scene.time.addEvent({
-                delay: Config.DialogTransitionTime,
-                callback: function() {
-                    resolve();
-                },
-                callbackScope: this
-            });
-        });
+    async executeBattle(attacker, defender, battleInfo) {
+        let dmgDealt = this.calculateDamage(attacker, defender);
+        defender.onDamage(dmgDealt);
+        if (defender.isDead()) {
+            defender.destroy();
+            this.currentLevel.removeUnit(defender);
+        }
+        await battleInfo.showAttackResult(dmgDealt);
     }
 }

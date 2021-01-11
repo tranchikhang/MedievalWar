@@ -27,7 +27,7 @@ class BattleInfo {
      * Show battle information
      * @param {string} text content to show
      */
-    show(text = '') {
+    async show(text = '') {
         let x = this.scene.camera.getOffsetX();
         let y = this.scene.camera.getOffsetY();
         if (text) {
@@ -40,16 +40,8 @@ class BattleInfo {
             this.content.setY(Config.WindowHeight / 3 + Map.getMapValue(y));
         }
         this.content.setVisible(true);
-        return new Promise(resolve => {
-            let timer = this.scene.time.addEvent({
-                delay: Config.DialogTransitionTime,
-                callback: function() {
-                    this.hide();
-                    resolve();
-                },
-                callbackScope: this
-            });
-        });
+        await Utils.sleep();
+        this.hide();
 
     }
 
