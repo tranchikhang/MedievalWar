@@ -27,7 +27,7 @@ The game can be broken down into components list as below.
     3. Attack enemy unit - In progress
         * Detect enemy unit
         * Select the unit to attack by moving cursor
-        * Show damage, hit rate etc calculation
+        * [Show damage, hit rate etc calculation](https://github.com/tranchikhang/MedievalWar/issues/5)
         * If user choose to attack, update unit status after attack (HP etc)
     4. Ally Support - Not implemented
     5. Battle system - In progress
@@ -36,14 +36,14 @@ The game can be broken down into components list as below.
         3. Support calculation
     6. AI
         1. Detect player unit in range, then move next to them
-        2. Aggressiveness level
+        2. [Aggressiveness level](https://github.com/tranchikhang/MedievalWar/issues/4)
         3. Decision making (to attack or not etc)
     7. Map objectives - Not implemented
 2. Character
     1. Classes
     2. Character data
     3. Character sprite - animation
-    4. Leveling system
+    4. [Leveling system](https://github.com/tranchikhang/MedievalWar/issues/6)
 3. [Items](https://github.com/tranchikhang/MedievalWar/issues/3)
     1. Unit inventory
     2. Unit equipment
