@@ -95,7 +95,7 @@ class BattleSystem {
      * @return {none} [description]
      */
     async processAITurn(battleInfo) {
-        for (var i = this.currentLevel.getEnemyUnits().length - 1; i >= 0; i--) {
+        for (var i = 0 ; i < this.currentLevel.getEnemyUnits().length ; i++) {
             let aiDecision = this.currentLevel.getEnemyUnits()[i].checkAvailableAction(this.currentLevel);
             let target = aiDecision.target;
             let path = aiDecision.path;
@@ -109,6 +109,13 @@ class BattleSystem {
         }
     }
 
+    /**
+     * Execute battle between attacker and defender
+     * @param  {object} attacker   attacking unit
+     * @param  {object} defender   defending unit
+     * @param  {object} battleInfo show result
+     * @return {none}
+     */
     async executeBattle(attacker, defender, battleInfo) {
         let dmgDealt = this.calculateDamage(attacker, defender);
         defender.onDamage(dmgDealt);

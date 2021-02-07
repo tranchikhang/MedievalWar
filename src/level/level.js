@@ -13,6 +13,7 @@ class Level {
         // List units
         this.playerUnits = [];
         this.enemyUnits = [];
+        this.enemyUnitsMap = {};
     }
 
     load() {
@@ -70,7 +71,7 @@ class Level {
         if (index < Constants.TILE_ENEMY_UNIT_START) {
             return this.playerUnits[index];
         } else {
-            return this.enemyUnits[index - Constants.TILE_ENEMY_UNIT_START];
+            return this.getEnemyUnitByIndex(index);
         }
     }
 
@@ -111,7 +112,7 @@ class Level {
         if (index < Constants.TILE_ENEMY_UNIT_START) {
             this.playerUnits[index].setPosition(x, y);
         } else {
-            this.enemyUnits[index - Constants.TILE_ENEMY_UNIT_START].setPosition(x, y);
+            this.getEnemyUnitByIndex(index).setPosition(x, y);
         }
     }
 
@@ -182,6 +183,15 @@ class Level {
     getEnemyUnits() {
         return this.enemyUnits;
     }
+
+    /**
+     * Get enemy unit by index
+     * @param  {int} idx enemy unit index
+     * @return {object} enemy unit
+     */
+    getEnemyUnitByIndex(idx) {
+        return this.enemyUnitsMap[idx];
+    }
     /**
      * Remove player unit from the map (retreat, death etc)
      * @param  {object} unit unit to be removed
@@ -192,6 +202,7 @@ class Level {
         if (unit.isEnemy()) {
             let idx = this.enemyUnits.findIndex(u => u.index === unit.index);
             this.enemyUnits.splice(idx, 1);
+            delete this.enemyUnitsMap[unit.index];
         } else {
             let idx = this.playerUnits.findIndex(u => u.index === unit.index);
             this.playerUnits.splice(idx, 1);

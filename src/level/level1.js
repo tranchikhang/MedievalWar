@@ -54,6 +54,7 @@ class Level1 extends Level {
             pal.drawStanding(Map.getMapValue(positionList[i][0], true), Map.getMapValue(positionList[i][1], true), pal.enemyTexture);
             pal.index = Constants.TILE_ENEMY_UNIT_START + i;
             this.enemyUnits.push(pal);
+            this.enemyUnitsMap[pal.index] = pal;
             // Set position on map
             this.drawUnitOnMap(Constants.TILE_ENEMY_UNIT_START + i, positionList[i][0], positionList[i][1]);
         }
