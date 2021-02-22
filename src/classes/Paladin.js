@@ -5,9 +5,6 @@ class Paladin extends BaseClass {
 
     constructor(scene) {
         super();
-        this.spritePath = Config.ASSET_PATH + 'tilesets/'
-        this.spriteFile = 'Toens_Medieval_v.1.0'
-        this.standingAnimationKey = 'Paladin_stand'
         this.scene = scene;
         this.className = 'Paladin';
         this.health = 36;
@@ -23,6 +20,5 @@ class Paladin extends BaseClass {
         this.enemyTexture = 122;
 
         this.moveType = this.MOVE_TYPE_MOUNTED;
-        this.loadAsset();
     }
 }

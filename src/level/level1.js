@@ -8,14 +8,6 @@ class Level1 extends Level {
         // Load json file into cache
         this.scene.load.tilemapTiledJSON('level1', this.jsonFile);
         this.scene.load.json('level1', this.jsonFile);
-
-        // Create ally units
-        this.pal = new Paladin(this.scene);
-        this.pal.name = 'Paladin 1';
-        this.pal.attack = 30;
-        this.pal2 = new Paladin(this.scene);
-        this.pal2.name = 'Paladin 2';
-        this.pal2.attack = 30;
     }
 
     createUnits() {
@@ -24,16 +16,24 @@ class Level1 extends Level {
     }
 
     createAllyUnits() {
+        // Create ally units
+        let pal = new Paladin(this.scene);
+        pal.name = 'Paladin 1';
+        let pal2 = new Paladin(this.scene);
+        pal2.name = 'Paladin 2';
+
         // Draw character
-        this.pal.drawStanding(Map.getMapValue(2, true), Map.getMapValue(2, true), this.pal.allyTexture);
-        this.pal.index = 0;
-        this.playerUnits.push(this.pal);
+        pal.drawStanding(Map.getMapValue(2, true), Map.getMapValue(2, true), pal.allyTexture);
+        pal.index = 0;
+        this.playerUnits.push(pal);
+        this.setPlayerUnitMapping(pal.index, pal);
         // Set position on map
         this.drawUnitOnMap(0, 2, 2);
 
-        this.pal2.drawStanding(Map.getMapValue(3, true), Map.getMapValue(4, true), this.pal2.allyTexture);
-        this.pal2.index = 1;
-        this.playerUnits.push(this.pal2);
+        pal2.drawStanding(Map.getMapValue(3, true), Map.getMapValue(4, true), pal2.allyTexture);
+        pal2.index = 1;
+        this.playerUnits.push(pal2);
+        this.setPlayerUnitMapping(pal2.index, pal2);
         // Set position on map
         this.drawUnitOnMap(1, 3, 4);
     }
@@ -54,7 +54,7 @@ class Level1 extends Level {
             pal.drawStanding(Map.getMapValue(positionList[i][0], true), Map.getMapValue(positionList[i][1], true), pal.enemyTexture);
             pal.index = Constants.TILE_ENEMY_UNIT_START + i;
             this.enemyUnits.push(pal);
-            this.enemyUnitsMap[pal.index] = pal;
+            this.setEnemyUnitMapping(pal.index, pal);
             // Set position on map
             this.drawUnitOnMap(Constants.TILE_ENEMY_UNIT_START + i, positionList[i][0], positionList[i][1]);
         }

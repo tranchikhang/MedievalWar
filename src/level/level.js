@@ -13,7 +13,12 @@ class Level {
         // List units
         this.playerUnits = [];
         this.enemyUnits = [];
+
+        // Object for mapping units using index
+        this.playerUnitsMap = {};
         this.enemyUnitsMap = {};
+
+        this.loadAsset();
     }
 
     load() {
@@ -33,6 +38,19 @@ class Level {
             }
             this.mapObject.push(row);
         }
+    }
+
+    /**
+     * Load sprite into cache
+     * @return {none}
+     */
+    loadAsset() {
+        this.scene.load.spritesheet(
+            'Paladin',
+            Config.ASSET_PATH + 'tilesets/' + Config.SPRITE_FILE + Config.SPRITE_EXT, {
+                frameWidth: Config.FRAME_WIDTH,
+                frameHeight: Config.FRAME_HEIGHT
+            });
     }
 
     /**
@@ -192,6 +210,25 @@ class Level {
     getEnemyUnitByIndex(idx) {
         return this.enemyUnitsMap[idx];
     }
+
+    /**
+     * set player unit object to mapping object using index
+     * @param {int} idx unit index
+     * @param {object} unit unit object
+     */
+    setPlayerUnitMapping(idx, unit) {
+        return this.playerUnits[idx] = unit;
+    }
+
+    /**
+     * set enemy unit object to mapping object using index
+     * @param {int} idx unit index
+     * @param {object} unit unit object
+     */
+    setEnemyUnitMapping(idx, unit) {
+        return this.enemyUnitsMap[idx] = unit;
+    }
+
     /**
      * Remove player unit from the map (retreat, death etc)
      * @param  {object} unit unit to be removed

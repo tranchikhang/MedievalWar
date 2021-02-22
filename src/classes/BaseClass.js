@@ -21,10 +21,6 @@ class BaseClass {
 
         this.moveType = this.MOVE_TYPE_NORMAL;
 
-        this.frameWidth = 16;
-        this.frameHeight = 16;
-        this.spriteExtension = '.png'
-
         // Store sprite object
         this.sprite = null;
 
@@ -157,19 +153,6 @@ class BaseClass {
         }
         this.sprite = this.scene.add.sprite(x, y, this.className, texture).setScale(1.5);
         this.createFinishedText();
-    }
-
-    /**
-     * Load sprite into cache
-     * @return {none}
-     */
-    loadAsset() {
-        this.scene.load.spritesheet(
-            this.className,
-            this.spritePath + this.spriteFile + this.spriteExtension, {
-                frameWidth: this.frameWidth,
-                frameHeight: this.frameHeight
-            });
     }
 
     /**
