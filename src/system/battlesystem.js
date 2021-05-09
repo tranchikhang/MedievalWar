@@ -95,14 +95,17 @@ class BattleSystem {
      * @return {none} [description]
      */
     async processAITurn(battleInfo) {
-        for (var i = 0 ; i < this.currentLevel.getEnemyUnits().length ; i++) {
+        for (var i = 0; i < this.currentLevel.getEnemyUnits().length; i++) {
             let aiDecision = this.currentLevel.getEnemyUnits()[i].checkAvailableAction(this.currentLevel);
             let target = aiDecision.target;
             let path = aiDecision.path;
-            if (path) {
-                this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
-                // Move next to player unit and attack
-                await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+            if (target) {
+                if (path) {
+                    // Move next to player unit and attack
+                    this.currentLevel.setUnitOnMap(this.currentLevel.getEnemyUnits()[i], path.x, path.y);
+                    await this.currentLevel.getEnemyUnits()[i].move(path.x, path.y);
+                }
+                // Player unit and enemy are next to each other
                 await this.executeBattle(this.currentLevel.getEnemyUnits()[i], target, battleInfo);
                 await Utils.sleep();
             }

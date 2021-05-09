@@ -41,9 +41,10 @@ class Ai {
                 };
                 // if current position is movable
                 if (map[newPos.y][newPos.x] == Constants.TILE_TERRAIN_ABLE_TO_PASS ||
+                    // or player unit and enemy are next to each other
                     (map[newPos.y][newPos.x] >= Constants.TILE_PLAYER_UNIT_START &&
                         map[newPos.y][newPos.x] < Constants.TILE_ENEMY_UNIT_START)) {
-                    // and haven't visited
+                    // if this tile hasn't been checked
                     if (!visited[newPos.y][newPos.x]) {
                         queue.push({
                             x: newPos.x,
@@ -65,8 +66,9 @@ class Ai {
                                     y: newPos.y
                                 });
                                 // Player unit and enemy are next to each other
-                                if (p.length==2) {
-                                    return null;
+                                if (p.length == 2) {
+                                    result.target = unit;
+                                    return result;
                                 }
                                 p.splice(0, 1);
                                 p.splice(p.length - 1, 1);
