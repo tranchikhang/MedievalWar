@@ -9,7 +9,7 @@ The game can be broken down into components list as below.
 1. Core gameplay
     1. Map
         1. Map data and loading - still need some code refactoring, especially with *level* class
-        2. Cursor for now
+        2. Cursor
         3. Control
             * Interaction (Select, Cancel etc)
             * Movement
@@ -38,7 +38,9 @@ The game can be broken down into components list as below.
         1. Detect player unit in range, then move next to them
         2. [Aggressiveness level](https://github.com/tranchikhang/MedievalWar/issues/4)
         3. Decision making (to attack or not etc)
-    7. Map objectives - Not implemented
+    7. Map objectives
+        1. Define objectives
+        2. Check if objectives are completed then end chapter
 2. Character
     1. Classes
     2. Character data

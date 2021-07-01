@@ -286,6 +286,8 @@ class MainScene extends Phaser.Scene {
         this.selectedUnit = null;
         this.unitOriginalPosition = {};
         if (this.battleSystem.isPlayerFinished()) {
+            this.control.disable();
+            // Reset data for new turn
             this.battleSystem.reset();
             // Enemy turn
             this.transition.show(lang['end.turn'], this.camera.getOffsetX(), this.camera.getOffsetY());
@@ -293,9 +295,11 @@ class MainScene extends Phaser.Scene {
                 delay: Config.DialogTransitionTime,
                 callback: function() {
                     this.transition.hide();
+                    // Process through each enemy unit
                     this.battleSystem.processAITurn(this.battleInfo);
                     // Reset mode flag
                     this.clearMode();
+                    this.control.enable();
                 },
                 callbackScope: this
             });
