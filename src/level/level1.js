@@ -3,6 +3,8 @@ class Level1 extends Level {
     constructor(scene) {
         super(scene, 'level1');
 
+        this.objective = new ObjectiveSystem(this, new ObjectiveKillAll());
+
         // Path to json file
         this.jsonFile = 'assets/level/level1.json';
         // Load json file into cache

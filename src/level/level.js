@@ -14,9 +14,15 @@ class Level {
         this.playerUnits = [];
         this.enemyUnits = [];
 
+        // The boss of the level
+        this.boss = null;
+
         // Object for mapping units using index
         this.playerUnitsMap = {};
         this.enemyUnitsMap = {};
+
+        // Objective of this level
+        this.objective = null;
 
         this.loadAsset();
     }
@@ -244,5 +250,13 @@ class Level {
             let idx = this.playerUnits.findIndex(u => u.index === unit.index);
             this.playerUnits.splice(idx, 1);
         }
+    }
+
+    /**
+     * return the boss of this level
+     * @return {object} boss unit
+     */
+    getBoss() {
+        return this.boss;
     }
 }
