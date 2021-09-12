@@ -123,7 +123,9 @@ class BattleSystem {
         let dmgDealt = this.calculateDamage(attacker, defender);
         defender.onDamage(dmgDealt);
         if (defender.isDead()) {
+            //remove unit
             defender.destroy();
+            // remove status menu
             this.currentLevel.removeUnit(defender);
         }
         await battleInfo.showAttackResult(dmgDealt);

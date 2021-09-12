@@ -259,4 +259,13 @@ class Level {
     getBoss() {
         return this.boss;
     }
+
+    /**
+     * check if objective of level is achieved or not
+     * executed after player unit phase or enemy phase
+     * @return {boolean}
+     */
+    checkObjectiveAchieved() {
+        return this.objective.checkAchieved();
+    }
 }

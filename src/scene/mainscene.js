@@ -286,6 +286,12 @@ class MainScene extends Phaser.Scene {
         this.selectedUnit = null;
         this.unitOriginalPosition = {};
         if (this.battleSystem.isPlayerFinished()) {
+            // check if objective of level is achieved or not
+            if (this.currentLevel.checkObjectiveAchieved()) {
+                console.log('Level completed');
+                // process to end level
+            }
+
             this.control.disable();
             // Reset data for new turn
             this.battleSystem.reset();

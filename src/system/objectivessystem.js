@@ -35,7 +35,7 @@ class ObjectiveKillAll extends ObjectiveSystem {
      * @return {boolean}
      */
     checkAchieved(currentLevel) {
-        if (this.currentLevel.getEnemyUnits().length == 0) {
+        if (currentLevel.getEnemyUnits().length == 0) {
             return true;
         }
         return false;
